@@ -25,11 +25,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
         this.theHottestList=theHottestList;
     }
 
-    @Override
-    public void onBindViewHolder(MyViewHolder holder, int position, List<Object> payloads) {
-        super.onBindViewHolder(holder, position, payloads);
-
-    }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {

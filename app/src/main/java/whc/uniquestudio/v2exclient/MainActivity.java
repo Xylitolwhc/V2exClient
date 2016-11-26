@@ -1,20 +1,14 @@
 package whc.uniquestudio.v2exclient;
 
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +24,7 @@ import Adapters.MyAdapter;
 import FromGson.GsonUtil;
 import FromGson.TheHottest;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     public static final int SHOW_RESPONSE = 0;
 
     private MyAdapter myAdapter;
@@ -44,8 +38,9 @@ public class MainActivity extends AppCompatActivity {
             if (msg.what == SHOW_RESPONSE) {
                 String response = (String) (msg.obj);
                 theHottestList = GsonUtil.parseJsonArrayWithGson(response, TheHottest.class);
+
                 myAdapter = new MyAdapter(MainActivity.this, theHottestList);
-                recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+
                 recyclerView.setAdapter(myAdapter);
 
                 myAdapter.notifyDataSetChanged();
@@ -56,12 +51,14 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewOfTheHottest);
         swipeRefreshLayoutOfTheHottest = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayoutOfTheHottest);
 
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         ConnectInternet();
 
 
