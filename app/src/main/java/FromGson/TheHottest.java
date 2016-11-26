@@ -1,5 +1,7 @@
 package FromGson;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by 吴航辰 on 2016/11/24.
  */
@@ -9,6 +11,7 @@ public class TheHottest {
     private String title, url, content;
     private Member member;
     private Node node;
+    private Bitmap avatar_mini=null, avatar_normal=null, avatar_large=null;
 
     public class Member {
         private int id;
@@ -80,5 +83,31 @@ public class TheHottest {
                 return node.avatar_large;
         }
         return "";
+    }
+
+    public void setBitmap(String bitmapName, Bitmap bitmap) {
+        switch (bitmapName) {
+            case "avatar_mini":
+                avatar_mini = bitmap;
+                break;
+            case "avatar_normal":
+                avatar_normal = bitmap;
+                break;
+            case "avatar_large":
+                avatar_large = bitmap;
+                break;
+        }
+    }
+
+    public Bitmap getBitmap(String query) {
+        switch (query) {
+            case "avatar_mini":
+                return avatar_mini;
+            case "avatar_normal":
+                return avatar_normal;
+            case "avatar_large":
+                return avatar_large;
+        }
+        return null;
     }
 }
