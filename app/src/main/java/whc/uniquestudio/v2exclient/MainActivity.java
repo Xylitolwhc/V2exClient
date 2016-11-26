@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +28,7 @@ import FromGson.TheHottest;
 
 public class MainActivity extends Activity {
     public static final int SHOW_RESPONSE = 0;
-    public static final int SHOW_BITMAP = 1;
+    public static final int CONNECT_FAILED = 1;
 
     private MyAdapter myAdapter;
     private RecyclerView recyclerView;
@@ -39,13 +38,20 @@ public class MainActivity extends Activity {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == SHOW_RESPONSE) {
-                myAdapter = new MyAdapter(MainActivity.this, theHottestList);
-                recyclerView.setAdapter(myAdapter);
+            switch(msg.what){
+                case SHOW_RESPONSE:{
+                    myAdapter = new MyAdapter(MainActivity.this, theHottestList);
+                    recyclerView.setAdapter(myAdapter);
 
-                myAdapter.notifyDataSetChanged();
-                Toast.makeText(MainActivity.this, "刷新成功", Toast.LENGTH_SHORT).show();
-                swipeRefreshLayoutOfTheHottest.setRefreshing(false);
+                    myAdapter.notifyDataSetChanged();
+                    Toast.makeText(MainActivity.this, "刷新成功", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayoutOfTheHottest.setRefreshing(false);
+                    break;
+                }
+                case CONNECT_FAILED:{
+                    Toast.makeText(MainActivity.this, "刷新失败", Toast.LENGTH_SHORT).show();
+                    break;
+                }
             }
         }
     };
@@ -59,28 +65,28 @@ public class MainActivity extends Activity {
 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        ConnectInternet();
+        ConnectInternet("https://www.v2ex.com/api/topics/hot.json");
 
 
         swipeRefreshLayoutOfTheHottest.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ConnectInternet();
+                ConnectInternet("https://www.v2ex.com/api/topics/hot.json");
             }
         });
     }
 
-    private void ConnectInternet() {
+    private void ConnectInternet(final String url) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 HttpURLConnection connection = null;
                 try {
-                    URL url = new URL("https://www.v2ex.com/api/topics/hot.json");
-                    connection = (HttpURLConnection) url.openConnection();
+                    URL myurl = new URL(url);
+                    connection = (HttpURLConnection) myurl.openConnection();
                     connection.setRequestMethod("GET");
-                    connection.setConnectTimeout(8000);
-                    connection.setReadTimeout(8000);
+                    connection.setConnectTimeout(5000);
+                    connection.setReadTimeout(5000);
                     InputStream in = connection.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                     StringBuilder response = new StringBuilder();
@@ -94,8 +100,8 @@ public class MainActivity extends Activity {
                         URL avatar_miniUrl = new URL("http:" + theHottest.getString("avatar_mini") + ".png");
                         connection = (HttpURLConnection) avatar_miniUrl.openConnection();
                         connection.setRequestMethod("GET");
-                        connection.setConnectTimeout(8000);
-                        connection.setReadTimeout(8000);
+                        connection.setConnectTimeout(5000);
+                        connection.setReadTimeout(5000);
                         InputStream avatar_miniIn = connection.getInputStream();
                         Bitmap avatar_miniBitmap = BitmapFactory.decodeStream(avatar_miniIn);
                         theHottest.setBitmap("avatar_mini", avatar_miniBitmap);
@@ -122,8 +128,14 @@ public class MainActivity extends Activity {
                     message.what = SHOW_RESPONSE;
                     handler.sendMessage(message);
                 } catch (MalformedURLException e) {
+                    Message message = new Message();
+                    message.what = CONNECT_FAILED;
+                    handler.sendMessage(message);
                     e.printStackTrace();
                 } catch (IOException e) {
+                    Message message = new Message();
+                    message.what = CONNECT_FAILED;
+                    handler.sendMessage(message);
                     e.printStackTrace();
                 } finally {
                     if (connection != null) {
