@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        //ConnectInternet();
+        ConnectInternet();
 
 
         swipeRefreshLayoutOfTheHottest.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
