@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import FromGson.TheHottest;
 public class MainActivity extends Activity {
     public static final int SHOW_RESPONSE = 0;
     public static final int CONNECT_FAILED = 1;
+    public static final int SHOW_PICTURE=2;
 
     private MyAdapter myAdapter;
     private RecyclerView recyclerView;
@@ -43,16 +45,21 @@ public class MainActivity extends Activity {
                     myAdapter = new MyAdapter(MainActivity.this, theHottestList);
                     recyclerView.setAdapter(myAdapter);
 
+                    getPicture();
                     myAdapter.notifyDataSetChanged();
                     Toast.makeText(MainActivity.this, "刷新成功", Toast.LENGTH_SHORT).show();
-                    swipeRefreshLayoutOfTheHottest.setRefreshing(false);
                     break;
                 }
                 case CONNECT_FAILED:{
                     Toast.makeText(MainActivity.this, "刷新失败", Toast.LENGTH_SHORT).show();
                     break;
                 }
+                case SHOW_PICTURE:{
+                    myAdapter.notifyDataSetChanged();
+                    break;
+                }
             }
+            swipeRefreshLayoutOfTheHottest.setRefreshing(false);
         }
     };
 
@@ -85,8 +92,8 @@ public class MainActivity extends Activity {
                     URL myurl = new URL(url);
                     connection = (HttpURLConnection) myurl.openConnection();
                     connection.setRequestMethod("GET");
-                    connection.setConnectTimeout(5000);
-                    connection.setReadTimeout(5000);
+                    connection.setConnectTimeout(8000);
+                    connection.setReadTimeout(8000);
                     InputStream in = connection.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                     StringBuilder response = new StringBuilder();
@@ -95,16 +102,72 @@ public class MainActivity extends Activity {
                         response.append(line);
                     }
                     theHottestList = GsonUtil.parseJsonArrayWithGson(response.toString(), TheHottest.class);
+//                    for (int i = 0; i < theHottestList.size(); i++) {//获取头像图片
+//                        TheHottest theHottest = theHottestList.get(i);
+//                        URL avatar_miniUrl = new URL("http:" + theHottest.getString("avatar_mini") + ".png");
+//                        connection = (HttpURLConnection) avatar_miniUrl.openConnection();
+//                        connection.setRequestMethod("GET");
+//                        connection.setConnectTimeout(5000);
+//                        connection.setReadTimeout(5000);
+//                        InputStream avatar_miniIn = connection.getInputStream();
+//                        Bitmap avatar_miniBitmap = BitmapFactory.decodeStream(avatar_miniIn);
+//                        theHottest.setBitmap("avatar_mini", avatar_miniBitmap);
+//
+////                        URL avatar_normalUrl = new URL("http:" + theHottest.getString("avatar_normal") + ".png");
+////                        connection = (HttpURLConnection) avatar_normalUrl.openConnection();
+////                        connection.setRequestMethod("GET");
+////                        connection.setConnectTimeout(8000);
+////                        connection.setReadTimeout(8000);
+////                        InputStream avatar_normalIn = connection.getInputStream();
+////                        Bitmap avatar_normalBitmap = BitmapFactory.decodeStream(avatar_normalIn);
+////                        theHottest.setBitmap("avatar_normal", avatar_normalBitmap);
+////
+////                        URL avatar_largeUrl = new URL("http:" + theHottest.getString("avatar_large") + ".png");
+////                        connection = (HttpURLConnection) avatar_largeUrl.openConnection();
+////                        connection.setRequestMethod("GET");
+////                        connection.setConnectTimeout(8000);
+////                        connection.setReadTimeout(8000);
+////                        InputStream avatar_largeIn = connection.getInputStream();
+////                        Bitmap avatar_largeBitmap = BitmapFactory.decodeStream(avatar_largeIn);
+////                        theHottest.setBitmap("avatar_large", avatar_largeBitmap);
+//                    }
+                    Message message = new Message();
+                    message.what = SHOW_RESPONSE;
+                    handler.sendMessage(message);
+                } catch (MalformedURLException e) {
+                    Message message = new Message();
+                    message.what = CONNECT_FAILED;
+                    handler.sendMessage(message);
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    Message message = new Message();
+                    message.what = SHOW_PICTURE;
+                    handler.sendMessage(message);
+                    e.printStackTrace();
+                } finally {
+                    if (connection != null) {
+                        connection.disconnect();
+                    }
+                }
+            }
+        }).start();
+    }
+    private void getPicture(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpURLConnection connection=null;
                     for (int i = 0; i < theHottestList.size(); i++) {//获取头像图片
-                        TheHottest theHottest = theHottestList.get(i);
-                        URL avatar_miniUrl = new URL("http:" + theHottest.getString("avatar_mini") + ".png");
-                        connection = (HttpURLConnection) avatar_miniUrl.openConnection();
-                        connection.setRequestMethod("GET");
-                        connection.setConnectTimeout(5000);
-                        connection.setReadTimeout(5000);
-                        InputStream avatar_miniIn = connection.getInputStream();
-                        Bitmap avatar_miniBitmap = BitmapFactory.decodeStream(avatar_miniIn);
-                        theHottest.setBitmap("avatar_mini", avatar_miniBitmap);
+                      try {
+                          TheHottest theHottest = theHottestList.get(i);
+                          URL avatar_miniUrl = new URL("http:" + theHottest.getString("avatar_mini"));
+                          connection = (HttpURLConnection) avatar_miniUrl.openConnection();
+                          connection.setRequestMethod("GET");
+                          connection.setConnectTimeout(8000);
+                          connection.setReadTimeout(8000);
+                          InputStream avatar_miniIn = connection.getInputStream();
+                          Bitmap avatar_miniBitmap = BitmapFactory.decodeStream(avatar_miniIn);
+                          theHottest.setBitmap("avatar_mini", avatar_miniBitmap);
 
 //                        URL avatar_normalUrl = new URL("http:" + theHottest.getString("avatar_normal") + ".png");
 //                        connection = (HttpURLConnection) avatar_normalUrl.openConnection();
@@ -123,25 +186,18 @@ public class MainActivity extends Activity {
 //                        InputStream avatar_largeIn = connection.getInputStream();
 //                        Bitmap avatar_largeBitmap = BitmapFactory.decodeStream(avatar_largeIn);
 //                        theHottest.setBitmap("avatar_large", avatar_largeBitmap);
+                      } catch (ProtocolException e) {
+                          e.printStackTrace();
+                      } catch (MalformedURLException e) {
+                          e.printStackTrace();
+                      } catch (IOException e) {
+                          e.printStackTrace();
+                      }finally {
+                          Message message = new Message();
+                          message.what = SHOW_PICTURE;
+                          handler.sendMessage(message);
+                      }
                     }
-                    Message message = new Message();
-                    message.what = SHOW_RESPONSE;
-                    handler.sendMessage(message);
-                } catch (MalformedURLException e) {
-                    Message message = new Message();
-                    message.what = CONNECT_FAILED;
-                    handler.sendMessage(message);
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    Message message = new Message();
-                    message.what = CONNECT_FAILED;
-                    handler.sendMessage(message);
-                    e.printStackTrace();
-                } finally {
-                    if (connection != null) {
-                        connection.disconnect();
-                    }
-                }
             }
         }).start();
     }

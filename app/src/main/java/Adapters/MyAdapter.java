@@ -67,7 +67,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
                 intent.putExtra("username",theHottest.getString("username"));
                 intent.putExtra("idImage",theHottest.getBitmap("avatar_mini"));
                 context.startActivity(intent);
-                Toast.makeText(context,""+position,Toast.LENGTH_SHORT).show();
             }
         });
     }
