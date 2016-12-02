@@ -2,7 +2,6 @@ package Adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import FromJsoup.ContentDetail;
+import Items.ContentDetail;
 import whc.uniquestudio.v2exclient.R;
 
 /**
@@ -65,15 +64,15 @@ public class ContentDetailAdapter extends RecyclerView.Adapter<ContentDetailView
             holder.contentDetailIdImage.setImageBitmap(idImage);
         } else {
             ContentDetail contentDetail = contentDetailList.get(position);
-            holder.contentDetailContent.setText(contentDetail.getString("replyContent"));
-            holder.contentDetailUsername.setText(contentDetail.getString("username"));
+            holder.contentDetailContent.setText(contentDetail.getReplyContent());
+            holder.contentDetailUsername.setText(contentDetail.getUsername());
             holder.contentDetailIdImage.setImageBitmap(contentDetail.getIdImage());
         }
     }
 
     @Override
     public int getItemCount() {
-        return contentDetailList.size();
+        return contentDetailList.size()+1;
     }
 }
 
