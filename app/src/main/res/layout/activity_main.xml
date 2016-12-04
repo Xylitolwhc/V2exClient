@@ -1,22 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="whc.uniquestudio.v2exclient.MainActivity">
 
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayoutOfTheHottest"
+    <ImageView
+        android:src="@mipmap/v2exlogo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:padding="5dp"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewOfTheHottest"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/mainViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        </android.support.v7.widget.RecyclerView>
-    </android.support.v4.widget.SwipeRefreshLayout>
-</RelativeLayout>
+        <android.support.v4.view.PagerTabStrip
+            android:id="@+id/mainViewPagerTitle"
+            android:layout_gravity="top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </android.support.v4.view.PagerTabStrip>
+    </android.support.v4.view.ViewPager>
+
+    <!--<android.support.v4.widget.SwipeRefreshLayout-->
+    <!--android:id="@+id/swipeRefreshLayoutOfTheHottest"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content">-->
+
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:id="@+id/recyclerViewOfTheHottest"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+
+    <!--</android.support.v7.widget.RecyclerView>-->
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
+</LinearLayout>

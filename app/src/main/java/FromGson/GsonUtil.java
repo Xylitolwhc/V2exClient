@@ -5,7 +5,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
-import Items.TheHottest;
+import Items.TopicsFromJson;
 
 /**
  * Created by 吴航辰 on 2016/11/25.
@@ -23,10 +23,10 @@ public class GsonUtil {
     }
 
     // 将Json数组解析成相应的映射对象列表
-    public static <T> List<TheHottest> parseJsonArrayWithGson(String jsonData,
-                                                              Class<T> type) {
+    public static <T> List<TopicsFromJson> parseJsonArrayWithGson(String jsonData,
+                                                                  Class<T> type) {
         Gson gson = new Gson();
-        List<TheHottest> result = gson.fromJson(jsonData, new TypeToken<List<TheHottest>>() {
+        List<TopicsFromJson> result = gson.fromJson(jsonData, new TypeToken<List<TopicsFromJson>>() {
         }.getType());
         return result;
     }

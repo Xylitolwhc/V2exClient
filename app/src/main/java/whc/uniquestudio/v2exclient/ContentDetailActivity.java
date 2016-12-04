@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import Adapters.ContentDetailAdapter;
 import Items.ContentDetail;
+import Items.RecycleViewDivider;
 import Net.ConnectInternet;
 
 /**
@@ -29,12 +31,9 @@ public class ContentDetailActivity extends Activity {
     private static final int CONNECT_FAILED = 1;
     private static final int SHOW_PICTURE = 2;
 
-    private String url, title, content, username;
+    private String url;
     private RecyclerView contentDetailRecyclerView;
-    private ConnectInternet connectInternet=ConnectInternet.getInstance();
-    private TextView contentDetailTitle, contentDetailUsername, contentDetailDetail, contentDetailContent;
-    private Bitmap idImage = null;
-    private ImageView contentDetailIdImage;
+    private ConnectInternet connectInternet = ConnectInternet.getInstance();
     private ContentDetailAdapter contentDetailAdapter;
     private List<ContentDetail> contentDetailList = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayoutOfTheContent;
@@ -45,11 +44,10 @@ public class ContentDetailActivity extends Activity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SHOW_RESPONSE: {
-                    contentDetailAdapter = new ContentDetailAdapter(ContentDetailActivity.this, contentDetailList, title, content, username, idImage);
+                    contentDetailAdapter = new ContentDetailAdapter(ContentDetailActivity.this, contentDetailList);
                     contentDetailRecyclerView.setAdapter(contentDetailAdapter);
                     getPicture();
                     contentDetailAdapter.notifyDataSetChanged();
-                    Toast.makeText(ContentDetailActivity.this, "刷新成功", Toast.LENGTH_SHORT).show();
                     break;
                 }
                 case CONNECT_FAILED: {
@@ -71,14 +69,12 @@ public class ContentDetailActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contentdetail);
 
-        //doFindViewById();
         doGetIntent();
         swipeRefreshLayoutOfTheContent = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayoutOfTheContent);
         contentDetailRecyclerView = (RecyclerView) findViewById(R.id.contentDetailRecyclerView);
 
         contentDetailRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        contentDetailAdapter = new ContentDetailAdapter(ContentDetailActivity.this, contentDetailList, title, content, username, idImage);
-        contentDetailRecyclerView.setAdapter(contentDetailAdapter);
+        contentDetailRecyclerView.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.HORIZONTAL));
 
         swipeRefreshLayoutOfTheContent.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -89,24 +85,10 @@ public class ContentDetailActivity extends Activity {
         connectInternet(url);
     }
 
-//    private void doFindViewById() {
-//        contentDetailRecyclerView = (RecyclerView) findViewById(R.id.contentDetailRecyclerView);
-//        contentDetailTitle = (TextView) findViewById(R.id.contentDetailTitle);
-//        contentDetailUsername = (TextView) findViewById(R.id.contentDetailUsername);
-//        contentDetailDetail = (TextView) findViewById(R.id.contentDetailDetail);
-//        contentDetailContent = (TextView) findViewById(R.id.contentDetailContent);
-//        contentDetailIdImage = (ImageView) findViewById(R.id.contentDetailIdImage);
-//    }
-
     private void doGetIntent() {
         Intent intent = getIntent();
         if (intent.hasExtra("url")) {
             url = intent.getStringExtra("url");
-            content = intent.getStringExtra("content");
-            title = intent.getStringExtra("title");
-            username = intent.getStringExtra("username");
-            idImage = intent.getParcelableExtra("idImage");
-
         } else {
             finish();
         }
@@ -123,10 +105,10 @@ public class ContentDetailActivity extends Activity {
                     message.what = SHOW_RESPONSE;
                     handler.sendMessage(message);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     Message message = new Message();
                     message.what = CONNECT_FAILED;
                     handler.sendMessage(message);
-                    e.printStackTrace();
                 }
             }
         }).start();

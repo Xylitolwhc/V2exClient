@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
  * Created by 吴航辰 on 2016/11/24.
  */
 
-public class TheHottest {
+public class TopicsFromJson {
     private int id, replies, created, last_modified, last_touched;
     private String title, url, content;
     public Member member;

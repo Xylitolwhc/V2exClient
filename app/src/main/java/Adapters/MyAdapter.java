@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import Items.TheHottest;
+import Items.TopicsFromJson;
 import whc.uniquestudio.v2exclient.ContentDetailActivity;
 import whc.uniquestudio.v2exclient.R;
 
@@ -22,23 +22,23 @@ import whc.uniquestudio.v2exclient.R;
  */
 
 public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-    private List<TheHottest> theHottestList;
+    private List<TopicsFromJson> topicsFromJsonList;
     private Context context;
 
-    public MyAdapter(Context context, List<TheHottest> theHottestList) {
+    public MyAdapter(Context context, List<TopicsFromJson> topicsFromJsonList) {
         this.context = context;
-        this.theHottestList = theHottestList;
+        this.topicsFromJsonList = topicsFromJsonList;
     }
 
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        final TheHottest theHottest = theHottestList.get(position);
-        holder.theHottestTitle.setText(theHottest.getTitle());
-        holder.theHottestContent.setText(theHottest.getContent());
-        holder.theId.setText(theHottest.member.getUsername());
-        holder.theReplies.setText("Replies:" + theHottest.getReplies());
-        holder.theIdImage.setImageBitmap(theHottest.getAvatar_mini());
+        final TopicsFromJson topicsFromJson = topicsFromJsonList.get(position);
+        holder.theHottestTitle.setText(topicsFromJson.getTitle());
+        holder.theHottestContent.setText(topicsFromJson.getContent());
+        holder.theId.setText(topicsFromJson.member.getUsername());
+        holder.theReplies.setText("Replies:" + topicsFromJson.getReplies());
+        holder.theIdImage.setImageBitmap(topicsFromJson.getAvatar_mini());
 
         holder.theIdImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,11 +50,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ContentDetailActivity.class);
-                intent.putExtra("url", theHottest.getUrl());
-                intent.putExtra("title", theHottest.getTitle());
-                intent.putExtra("content", theHottest.getContent());
-                intent.putExtra("username", theHottest.member.getUsername());
-                intent.putExtra("idImage", theHottest.getAvatar_mini());
+                intent.putExtra("url", topicsFromJson.getUrl());
                 context.startActivity(intent);
             }
         });
@@ -62,13 +58,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MyViewHolder holder = new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.cardviewitem, parent, false));
+        MyViewHolder holder = new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.topic_item, parent, false));
         return holder;
     }
 
     @Override
     public int getItemCount() {
-        return theHottestList.size();
+        return topicsFromJsonList.size();
     }
 
 }

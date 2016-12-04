@@ -7,8 +7,16 @@ import android.graphics.Bitmap;
  */
 
 public class ContentDetail {
-    private String username = null, replyContent = null, imageUrl = null, detail = null;
+    private String username = null, replyContent = null, imageUrl = null, detail = null, title = null;
     private Bitmap idImage = null;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getDetail() {
         return detail;
