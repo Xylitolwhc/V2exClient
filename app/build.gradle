@@ -29,4 +29,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.0'
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'org.jsoup:jsoup:1.10.1'
+    compile 'org.commonjava.googlecode.markdown4j:markdown4j:2.2-cj-1.1'
+    compile 'org.webjars.npm:react-imageloader:2.1.0'
 }

@@ -2,6 +2,8 @@ package Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +78,8 @@ public class ContentDetailAdapter extends RecyclerView.Adapter<ContentDetailView
                 case TYPE_NORMAL: {
                     ContentDetail contentDetail = contentDetailList.get(position);
                     holder.contentDetailContent.setText(contentDetail.getReplyContent());
+//                    holder.contentDetailContent.setAutoLinkMask(Linkify.ALL);
+                    holder.contentDetailContent.setMovementMethod(LinkMovementMethod.getInstance());
                     holder.contentDetailUsername.setText(contentDetail.getUsername());
                     holder.contentDetailUsername.getPaint().setFakeBoldText(true);
                     holder.contentDetailIdImage.setImageBitmap(contentDetail.getIdImage());

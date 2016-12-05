@@ -57,7 +57,6 @@ public class JsoupFragments extends Fragment{
                     break;
                 }
                 case SHOW_PICTURE: {
-                    Log.d("M", "OK");
                     jsoupItemAdapter.notifyDataSetChanged();
                     break;
                 }
@@ -122,7 +121,6 @@ public class JsoupFragments extends Fragment{
                     try {
                         TopicsFromJsoup topicsFromJsoup = topicsFromJsoupList.get(i);
                         topicsFromJsoup.setBitmap(connectInternet.getPicture("http:"+topicsFromJsoup.getImgUrl()));
-                        Log.d("M", topicsFromJsoup.getImgUrl());
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,12 +51,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ContentDetailActivity.class);
-                intent.putExtra("url", topicsFromJson.getUrl());
+                intent.putExtra("url", toHTTPs(topicsFromJson.getUrl()));
                 context.startActivity(intent);
             }
         });
     }
 
+    private String toHTTPs(String url){
+        return "https"+url.substring(4);
+    }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         MyViewHolder holder = new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.topic_item, parent, false));
