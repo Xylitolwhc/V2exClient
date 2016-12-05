@@ -9,6 +9,8 @@ import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ import Adapters.ContentDetailAdapter;
 import Items.ContentDetail;
 import Items.RecycleViewDivider;
 import Net.ConnectInternet;
+import Net.imgGetter;
 
 /**
  * Created by 吴航辰 on 2016/11/26.
@@ -121,6 +124,8 @@ public class ContentDetailActivity extends Activity {
                 for (int i = 0; i < contentDetailList.size(); i++) {//获取头像图片
                     try {
                         ContentDetail contentDetail = contentDetailList.get(i);
+                        Spanned replyContent = Html.fromHtml(contentDetail.getReplyContentHtml(), new imgGetter(), null);
+                        contentDetail.setReplyContent(replyContent);
                         contentDetail.setIdImage(connectInternet.getPicture("http:" + contentDetail.getImageUrl()));
                     } catch (Exception e) {
                         e.printStackTrace();

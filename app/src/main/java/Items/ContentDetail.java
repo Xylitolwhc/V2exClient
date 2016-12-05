@@ -8,9 +8,17 @@ import android.text.Spanned;
  */
 
 public class ContentDetail {
-    private String username = null, imageUrl = null, detail = null, title = null;
+    private String username = null, imageUrl = null, detail = null, title = null, replyContentHtml = null;
     private Bitmap idImage = null;
     private Spanned replyContent = null;
+
+    public String getReplyContentHtml() {
+        return replyContentHtml;
+    }
+
+    public void setReplyContentHtml(String replyContentHtml) {
+        this.replyContentHtml = replyContentHtml;
+    }
 
     public Spanned getReplyContent() {
         return replyContent;

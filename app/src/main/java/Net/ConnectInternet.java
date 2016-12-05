@@ -87,7 +87,8 @@ public class ConnectInternet {
             posterDetail.setImageUrl(poster.select("img[src]").attr("src").toString());
             posterDetail.setTitle(poster.getElementsByTag("h1").text().toString());
             posterDetail.setUsername(poster.getElementsByClass("gray").select("a[href]").first().text().toString());
-            posterDetail.setReplyContent(Html.fromHtml(poster.select("div.topic_content").html(), new imgGetter(), null));
+            posterDetail.setReplyContent(Html.fromHtml(poster.select("div.topic_content").html()));
+            posterDetail.setReplyContentHtml(poster.select("div.topic_content").html());
             contentDetailList.add(posterDetail);
 
             if (document.getElementsByClass("box").size() > 1) {
@@ -114,12 +115,14 @@ public class ConnectInternet {
 
     private ContentDetail getContentDetail(Element content) {
         String imgUrl = content.select("img[src]").first().attr("src").toString();
-        Spanned replyContent = Html.fromHtml(content.select("div.reply_content").html(), new imgGetter(), null);
+        Spanned replyContent = Html.fromHtml(content.select("div.reply_content").html());
+        String replyContentHtml = content.select("div.reply_content").html();
         String userName = content.select("a[href]").first().text();
         String detail = content.getElementsByClass("fade small").first().text().toString();
 
         ContentDetail contentDetail = new ContentDetail();
         contentDetail.setReplyContent(replyContent);
+        contentDetail.setReplyContentHtml(replyContentHtml);
         contentDetail.setUsername(userName);
         contentDetail.setImageUrl(imgUrl);
         contentDetail.setDetail(detail);
