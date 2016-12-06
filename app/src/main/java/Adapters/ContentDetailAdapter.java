@@ -3,8 +3,6 @@ package Adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,15 +53,15 @@ public class ContentDetailAdapter extends RecyclerView.Adapter<ContentDetailView
 
         switch (viewType) {
             case TYPE_HEADER:
-                return new ContentDetailViewHolder(LayoutInflater.from(context).inflate(R.layout.headcardview, parent, false), TYPE_HEADER);
+                return new ContentDetailViewHolder(LayoutInflater.from(context).inflate(R.layout.item_header, parent, false), TYPE_HEADER);
             case TYPE_NORMAL:
-                return new ContentDetailViewHolder(LayoutInflater.from(context).inflate(R.layout.detailcardview_item, parent, false), TYPE_NORMAL);
+                return new ContentDetailViewHolder(LayoutInflater.from(context).inflate(R.layout.item_contentdetail, parent, false), TYPE_NORMAL);
             case TYPE_EMPTY:
-                return new ContentDetailViewHolder(LayoutInflater.from(context).inflate(R.layout.noreply_item, parent, false), TYPE_EMPTY);
+                return new ContentDetailViewHolder(LayoutInflater.from(context).inflate(R.layout.item_noreply, parent, false), TYPE_EMPTY);
             case TYPE_END:
-                return new ContentDetailViewHolder(LayoutInflater.from(context).inflate(R.layout.end_item, parent, false), TYPE_END);
+                return new ContentDetailViewHolder(LayoutInflater.from(context).inflate(R.layout.item_end, parent, false), TYPE_END);
             default:
-                return new ContentDetailViewHolder(LayoutInflater.from(context).inflate(R.layout.end_item, parent, false), TYPE_END);
+                return new ContentDetailViewHolder(LayoutInflater.from(context).inflate(R.layout.item_end, parent, false), TYPE_END);
         }
     }
 

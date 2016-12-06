@@ -27,6 +27,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mainViewPager = (ViewPager) findViewById(R.id.mainViewPager);
+        mainViewPager.setOffscreenPageLimit(4);
 
         JsonFragments theHottestFragment = new JsonFragments();
         theHottestFragment.setUrl("https://www.v2ex.com/api/topics/hot.json");

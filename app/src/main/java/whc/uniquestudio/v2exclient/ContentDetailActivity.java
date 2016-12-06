@@ -2,7 +2,6 @@ package whc.uniquestudio.v2exclient;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,9 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -70,7 +66,7 @@ public class ContentDetailActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.contentdetail);
+        setContentView(R.layout.activity_contentdetail);
 
         doGetIntent();
         swipeRefreshLayoutOfTheContent = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayoutOfTheContent);

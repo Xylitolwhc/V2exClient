@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
+import Items.Nodes;
 import Items.TopicsFromJson;
 
 /**
@@ -23,10 +24,15 @@ public class GsonUtil {
     }
 
     // 将Json数组解析成相应的映射对象列表
-    public static <T> List<TopicsFromJson> parseJsonArrayWithGson(String jsonData,
-                                                                  Class<T> type) {
+    public static <T> List<TopicsFromJson> parseTopicsJsonArrayWithGson(String jsonData) {
         Gson gson = new Gson();
         List<TopicsFromJson> result = gson.fromJson(jsonData, new TypeToken<List<TopicsFromJson>>() {
+        }.getType());
+        return result;
+    }
+    public static <T> List<Nodes> parseNodesJsonArrayWithGson(String jsonData) {
+        Gson gson = new Gson();
+        List<Nodes> result = gson.fromJson(jsonData, new TypeToken<List<Nodes>>() {
         }.getType());
         return result;
     }

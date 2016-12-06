@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +69,7 @@ public class JsonFragments extends android.support.v4.app.Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.topics_gson_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_topics_gson, container, false);
 
         context = getActivity();
         topicsFromJsonList = new ArrayList<>();

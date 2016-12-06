@@ -47,7 +47,7 @@ public class ConnectInternet {
 
         HttpURLConnection connection = null;
         try {
-            topicsFromJsonList = GsonUtil.parseJsonArrayWithGson(getHTML(url), TopicsFromJson.class);
+            topicsFromJsonList = GsonUtil.parseTopicsJsonArrayWithGson(getHTML(url));
         } finally {
             if (connection != null) {
                 connection.disconnect();

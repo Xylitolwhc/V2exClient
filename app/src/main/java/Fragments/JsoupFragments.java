@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +70,7 @@ public class JsoupFragments extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.topics_jsoup_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_topics_jsoup, container, false);
 
         context = getActivity();
         topicsFromJsoupList = new ArrayList<>();

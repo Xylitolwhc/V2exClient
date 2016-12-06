@@ -9,11 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
-import Items.TopicsFromJson;
 import Items.TopicsFromJsoup;
 import whc.uniquestudio.v2exclient.ContentDetailActivity;
 import whc.uniquestudio.v2exclient.R;
@@ -52,7 +50,7 @@ public class JsoupItemAdapter extends RecyclerView.Adapter<MyJsoupViewHolder> {
 
     @Override
     public MyJsoupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MyJsoupViewHolder holder = new MyJsoupViewHolder(LayoutInflater.from(context).inflate(R.layout.topic_item_jsoup, parent, false));
+        MyJsoupViewHolder holder = new MyJsoupViewHolder(LayoutInflater.from(context).inflate(R.layout.item_topic_jsoup, parent, false));
         return holder;
     }
 
