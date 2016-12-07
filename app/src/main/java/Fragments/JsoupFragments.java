@@ -26,13 +26,13 @@ import whc.uniquestudio.v2exclient.R;
  * Created by 吴航辰 on 2016/12/3.
  */
 
-public class JsoupFragments extends Fragment{
+public class JsoupFragments extends Fragment {
 
     private static final int SHOW_RESPONSE = 0;
     private static final int CONNECT_FAILED = 1;
     private static final int SHOW_PICTURE = 2;
 
-    private String url=null;
+    private String url = null;
     private Context context;
     private List<TopicsFromJsoup> topicsFromJsoupList;
     private JsoupItemAdapter jsoupItemAdapter;
@@ -64,9 +64,6 @@ public class JsoupFragments extends Fragment{
         }
     };
 
-    public void setUrl(String s){
-        url=s;
-    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,6 +78,7 @@ public class JsoupFragments extends Fragment{
         recyclerViewOfTheJsoup.setLayoutManager(new LinearLayoutManager(context));
         recyclerViewOfTheJsoup.setAdapter(jsoupItemAdapter);
 
+        url = getArguments().getString("url");
         ConnectInternet(url);
         swipeRefreshLayoutOfTheJsoup.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -113,13 +111,15 @@ public class JsoupFragments extends Fragment{
     }
 
     private void getPicture() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < topicsFromJsoupList.size(); i++) {//获取头像图片
+
+        for (int i = 0; i < topicsFromJsoupList.size(); i++) {//获取头像图片
+            final int j=i;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
                     try {
-                        TopicsFromJsoup topicsFromJsoup = topicsFromJsoupList.get(i);
-                        topicsFromJsoup.setBitmap(connectInternet.getPicture("http:"+topicsFromJsoup.getImgUrl()));
+                        TopicsFromJsoup topicsFromJsoup = topicsFromJsoupList.get(j);
+                        topicsFromJsoup.setBitmap(connectInternet.getPicture("http:" + topicsFromJsoup.getImgUrl()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
@@ -128,7 +128,8 @@ public class JsoupFragments extends Fragment{
                         handler.sendMessage(message);
                     }
                 }
-            }
-        }).start();
+            }).start();
+        }
+
     }
 }

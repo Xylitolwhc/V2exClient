@@ -2,6 +2,7 @@ package whc.uniquestudio.v2exclient;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -114,12 +116,14 @@ public class ContentDetailActivity extends Activity {
     }
 
     private void getPicture() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < contentDetailList.size(); i++) {//获取头像图片
+
+        for (int i = 0; i < contentDetailList.size(); i++) {//获取头像图片
+            final int j = i;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ContentDetail contentDetail = contentDetailList.get(j);
                     try {
-                        ContentDetail contentDetail = contentDetailList.get(i);
                         Spanned replyContent = Html.fromHtml(contentDetail.getReplyContentHtml(), new imgGetter(), null);
                         contentDetail.setReplyContent(replyContent);
                         contentDetail.setIdImage(connectInternet.getPicture("http:" + contentDetail.getImageUrl()));
@@ -131,7 +135,8 @@ public class ContentDetailActivity extends Activity {
                         handler.sendMessage(message);
                     }
                 }
-            }
-        }).start();
+            }).start();
+        }
+
     }
 }

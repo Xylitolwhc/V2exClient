@@ -80,7 +80,11 @@ public class ContentDetailAdapter extends RecyclerView.Adapter<ContentDetailView
                     holder.contentDetailContent.setMovementMethod(LinkMovementMethod.getInstance());
                     holder.contentDetailUsername.setText(contentDetail.getUsername());
                     holder.contentDetailUsername.getPaint().setFakeBoldText(true);
-                    holder.contentDetailIdImage.setImageBitmap(contentDetail.getIdImage());
+                    if (contentDetail.getIdImage()!=null){
+                    holder.contentDetailIdImage.setImageBitmap(contentDetail.getIdImage());}
+                    else{
+                        holder.contentDetailIdImage.setImageResource(R.mipmap.v2exlogo);
+                    }
                     holder.contentDetailDetail.setText(contentDetail.getDetail());
                     break;
                 }

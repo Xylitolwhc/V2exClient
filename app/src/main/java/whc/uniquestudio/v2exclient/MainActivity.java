@@ -29,27 +29,29 @@ public class MainActivity extends FragmentActivity {
         mainViewPager = (ViewPager) findViewById(R.id.mainViewPager);
         mainViewPager.setOffscreenPageLimit(4);
 
-        JsonFragments theHottestFragment = new JsonFragments();
-        theHottestFragment.setUrl("https://www.v2ex.com/api/topics/hot.json");
-        JsonFragments theNewestFragment = new JsonFragments();
-        theNewestFragment.setUrl("https://www.v2ex.com/api/topics/latest.json");
-        JsoupFragments pythonJsoup=new JsoupFragments();
-        pythonJsoup.setUrl("https://www.v2ex.com/go/python");
-        JsoupFragments programmerJsoup=new JsoupFragments();
-        programmerJsoup.setUrl("https://www.v2ex.com/go/programmer");
-
-        fragmentList.add(theHottestFragment);
-        titleList.add("最热主题");
-        fragmentList.add(theNewestFragment);
-        titleList.add("最新主题");
-        fragmentList.add(pythonJsoup);
-        titleList.add("Python");
-        fragmentList.add(programmerJsoup);
-        titleList.add("程序员");
+        addJsonFragment("https://www.v2ex.com/api/topics/hot.json","最热主题");
+        addJsonFragment("https://www.v2ex.com/api/topics/latest.json","最新主题");
+        addJsoupFragment("https://www.v2ex.com/go/python","Python");
+        addJsoupFragment("https://www.v2ex.com/go/programmer","程序员");
 
         MyFragmentAdapter myFragmentAdapter = new MyFragmentAdapter(getSupportFragmentManager(), fragmentList,titleList);
         mainViewPager.setAdapter(myFragmentAdapter);
     }
 
-
+    private void addJsonFragment(String url,String title){
+        JsonFragments jsonFragment=new JsonFragments();
+        Bundle bundle=new Bundle();
+        bundle.putString("url",url);
+        jsonFragment.setArguments(bundle);
+        fragmentList.add(jsonFragment);
+        titleList.add(title);
+    }
+    private void addJsoupFragment(String url,String title){
+        JsoupFragments jsoupFragment=new JsoupFragments();
+        Bundle bundle=new Bundle();
+        bundle.putString("url",url);
+        jsoupFragment.setArguments(bundle);
+        fragmentList.add(jsoupFragment);
+        titleList.add(title);
+    }
 }
