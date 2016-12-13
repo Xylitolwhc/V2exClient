@@ -35,6 +35,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:paddingLeft="5dp"
+                    android:paddingBottom="5dp"
                     android:paddingTop="5dp" />
 
                 <TextView
@@ -62,13 +63,21 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="#AAA" />
+
             <TextView
                 android:id="@+id/theHottestTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
+                android:paddingTop="5dp"
                 android:paddingLeft="5dp"
                 android:text="Title"
+                android:textColor="@color/colorTitle"
                 android:textSize="20dp" />
 
             <TextView

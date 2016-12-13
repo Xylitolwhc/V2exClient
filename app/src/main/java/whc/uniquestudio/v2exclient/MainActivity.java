@@ -1,57 +1,73 @@
 package whc.uniquestudio.v2exclient;
 
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.widget.ImageView;
-
-import org.markdown4j.Markdown4jProcessor;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ActivityView.PagesView;
 import Adapters.MyFragmentAdapter;
 import Fragments.JsonFragments;
 import Fragments.JsoupFragments;
+import Presenter.PagesPresenter;
+import Presenter.PagesPresenterMain;
 
-public class MainActivity extends FragmentActivity {
-
+public class MainActivity extends FragmentActivity implements PagesView {
     private ViewPager mainViewPager;
-    private List<Fragment> fragmentList = new ArrayList<>();
-    private List<String> titleList = new ArrayList<>();
+    private Button showNodes;
+    private MyFragmentAdapter myFragmentAdapter;
+
+    PagesPresenter pagesPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        showNodes = (Button) findViewById(R.id.getNodes);
         mainViewPager = (ViewPager) findViewById(R.id.mainViewPager);
-        mainViewPager.setOffscreenPageLimit(4);
 
-        addJsonFragment("https://www.v2ex.com/api/topics/hot.json","最热主题");
-        addJsonFragment("https://www.v2ex.com/api/topics/latest.json","最新主题");
-        addJsoupFragment("https://www.v2ex.com/go/python","Python");
-        addJsoupFragment("https://www.v2ex.com/go/programmer","程序员");
+        pagesPresenter = new PagesPresenterMain(this);
+        pagesPresenter.refresh();
 
-        MyFragmentAdapter myFragmentAdapter = new MyFragmentAdapter(getSupportFragmentManager(), fragmentList,titleList);
+        showNodes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AllNodesActivity.class);
+                startActivityForResult(intent, 1);
+            }
+        });
+
+    }
+
+    @Override
+    public void setAdapter(MyFragmentAdapter myFragmentAdapter) {
         mainViewPager.setAdapter(myFragmentAdapter);
+        mainViewPager.setOffscreenPageLimit(4);
     }
 
-    private void addJsonFragment(String url,String title){
-        JsonFragments jsonFragment=new JsonFragments();
-        Bundle bundle=new Bundle();
-        bundle.putString("url",url);
-        jsonFragment.setArguments(bundle);
-        fragmentList.add(jsonFragment);
-        titleList.add(title);
+    @Override
+    public SharedPreferences getTheSharedPreferences(String name, int mode) {
+        return getSharedPreferences(name, mode);
     }
-    private void addJsoupFragment(String url,String title){
-        JsoupFragments jsoupFragment=new JsoupFragments();
-        Bundle bundle=new Bundle();
-        bundle.putString("url",url);
-        jsoupFragment.setArguments(bundle);
-        fragmentList.add(jsoupFragment);
-        titleList.add(title);
+
+    @Override
+    public FragmentManager getTheFragmentManager() {
+        return getSupportFragmentManager();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("On", "Resume");
     }
 }

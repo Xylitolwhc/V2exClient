@@ -2,17 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="whc.uniquestudio.v2exclient.MainActivity">
 
-    <ImageView
-        android:src="@mipmap/v2exlogo"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:padding="5dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:padding="5dp"
+            android:src="@mipmap/v2exlogo" />
+
+        <Button
+            android:id="@+id/getNodes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nodes"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/mainViewPager"
@@ -21,9 +33,9 @@
 
         <android.support.v4.view.PagerTabStrip
             android:id="@+id/mainViewPagerTitle"
-            android:layout_gravity="top"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="top">
 
         </android.support.v4.view.PagerTabStrip>
     </android.support.v4.view.ViewPager>

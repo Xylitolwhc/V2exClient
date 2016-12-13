@@ -38,7 +38,6 @@ public class JsoupFragments extends Fragment {
     private JsoupItemAdapter jsoupItemAdapter;
     private SwipeRefreshLayout swipeRefreshLayoutOfTheJsoup;
     private RecyclerView recyclerViewOfTheJsoup;
-    private ConnectInternet connectInternet = ConnectInternet.getInstance();
 
     private Handler handler = new Handler() {
         @Override
@@ -52,7 +51,7 @@ public class JsoupFragments extends Fragment {
                     break;
                 }
                 case CONNECT_FAILED: {
-                    Toast.makeText(context, "刷新失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "出错了", Toast.LENGTH_SHORT).show();
                     break;
                 }
                 case SHOW_PICTURE: {
@@ -95,7 +94,7 @@ public class JsoupFragments extends Fragment {
             @Override
             public void run() {
                 try {
-                    topicsFromJsoupList = connectInternet.getTopicsFromJsoup(url);
+                    topicsFromJsoupList = ConnectInternet.getTopicsFromJsoup(url);
 
                     Message message = new Message();
                     message.what = SHOW_RESPONSE;
@@ -113,20 +112,15 @@ public class JsoupFragments extends Fragment {
     private void getPicture() {
 
         for (int i = 0; i < topicsFromJsoupList.size(); i++) {//获取头像图片
-            final int j=i;
+            final int j = i;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        TopicsFromJsoup topicsFromJsoup = topicsFromJsoupList.get(j);
-                        topicsFromJsoup.setBitmap(connectInternet.getPicture("http:" + topicsFromJsoup.getImgUrl()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        Message message = new Message();
-                        message.what = SHOW_PICTURE;
-                        handler.sendMessage(message);
-                    }
+                    TopicsFromJsoup topicsFromJsoup = topicsFromJsoupList.get(j);
+                    topicsFromJsoup.setBitmap(ConnectInternet.getPicture("http:" + topicsFromJsoup.getImgUrl()));
+                    Message message = new Message();
+                    message.what = SHOW_PICTURE;
+                    handler.sendMessage(message);
                 }
             }).start();
         }

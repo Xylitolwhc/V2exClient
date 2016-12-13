@@ -11,8 +11,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import org.markdown4j.Markdown4jProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +37,6 @@ public class ContentDetailActivity extends Activity {
 
     private String url;
     private RecyclerView contentDetailRecyclerView;
-    private ConnectInternet connectInternet = ConnectInternet.getInstance();
     private ContentDetailAdapter contentDetailAdapter;
     private List<ContentDetail> contentDetailList = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayoutOfTheContent;
@@ -45,6 +47,10 @@ public class ContentDetailActivity extends Activity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SHOW_RESPONSE: {
+                    if (contentDetailList.isEmpty()){
+                        Toast.makeText(ContentDetailActivity.this, "出错了", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
                     contentDetailAdapter = new ContentDetailAdapter(ContentDetailActivity.this, contentDetailList);
                     contentDetailRecyclerView.setAdapter(contentDetailAdapter);
                     getPicture();
@@ -52,7 +58,8 @@ public class ContentDetailActivity extends Activity {
                     break;
                 }
                 case CONNECT_FAILED: {
-                    Toast.makeText(ContentDetailActivity.this, "刷新失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ContentDetailActivity.this, "出错了", Toast.LENGTH_SHORT).show();
+                    finish();
                     break;
                 }
                 case SHOW_PICTURE: {
@@ -101,15 +108,15 @@ public class ContentDetailActivity extends Activity {
             @Override
             public void run() {
                 try {
-                    contentDetailList = connectInternet.getContentDetailList(url);
+                    contentDetailList = ConnectInternet.getContentDetailList(url);
                     Message message = new Message();
                     message.what = SHOW_RESPONSE;
                     handler.sendMessage(message);
                 } catch (Exception e) {
-                    e.printStackTrace();
                     Message message = new Message();
                     message.what = CONNECT_FAILED;
                     handler.sendMessage(message);
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -124,9 +131,27 @@ public class ContentDetailActivity extends Activity {
                 public void run() {
                     ContentDetail contentDetail = contentDetailList.get(j);
                     try {
+                        contentDetail.setIdImage(ConnectInternet.getPicture("http:" + contentDetail.getImageUrl()));
+                    } catch (Exception e) {
+                        Message message=new Message();
+                        message.what=CONNECT_FAILED;
+                        handler.sendMessage(message);
+                        e.printStackTrace();
+                    } finally {
+                        Message message = new Message();
+                        message.what = SHOW_PICTURE;
+                        handler.sendMessage(message);
+                    }
+                }
+            }).start();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ContentDetail contentDetail = contentDetailList.get(j);
+                    try {
                         Spanned replyContent = Html.fromHtml(contentDetail.getReplyContentHtml(), new imgGetter(), null);
                         contentDetail.setReplyContent(replyContent);
-                        contentDetail.setIdImage(connectInternet.getPicture("http:" + contentDetail.getImageUrl()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
@@ -137,6 +162,5 @@ public class ContentDetailActivity extends Activity {
                 }
             }).start();
         }
-
     }
 }

@@ -3,6 +3,7 @@ package Adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import java.util.List;
 
@@ -17,19 +18,20 @@ public class MyFragmentAdapter extends FragmentPagerAdapter {
 
     public MyFragmentAdapter(FragmentManager fm, List<Fragment> fragmentList,List<String> titleList) {
         super(fm);
-        this.fragmentList=fragmentList;
         this.titleList=titleList;
+        this.fragmentList=fragmentList;
     }
-
+    @Override
+    public CharSequence getPageTitle(int position) {
+        Log.d("Title",titleList.get(position));
+        return titleList.get(position);
+    }
     @Override
     public Fragment getItem(int position) {
         return fragmentList.get(position);
     }
 
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return titleList.get(position);
-    }
+
 
     @Override
     public int getCount() {

@@ -38,7 +38,6 @@ public class JsonFragments extends android.support.v4.app.Fragment {
     private List<TopicsFromJson> topicsFromJsonList;
     private MyAdapter myAdapter;
     private SwipeRefreshLayout swipeRefreshLayoutOfTheHottest;
-    private ConnectInternet connectInternet = ConnectInternet.getInstance();
 
     private Handler handler = new Handler() {
         @Override
@@ -78,7 +77,7 @@ public class JsonFragments extends android.support.v4.app.Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(myAdapter);
 
-        url=getArguments().getString("url");
+        url = getArguments().getString("url");
         ConnectInternet(url);
         swipeRefreshLayoutOfTheHottest.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -95,7 +94,7 @@ public class JsonFragments extends android.support.v4.app.Fragment {
             @Override
             public void run() {
                 try {
-                    topicsFromJsonList = connectInternet.getTheHottestList(url);
+                    topicsFromJsonList = ConnectInternet.getTheHottestList(url);
 
                     Message message = new Message();
                     message.what = SHOW_RESPONSE;
@@ -114,16 +113,18 @@ public class JsonFragments extends android.support.v4.app.Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < topicsFromJsonList.size(); i++) {//获取头像图片
-                    try {
-                        TopicsFromJson topicsFromJson = topicsFromJsonList.get(i);
-                        topicsFromJson.setAvatar_mini(connectInternet.getPicture("http:" + topicsFromJson.member.getAvatar_mini()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        Message message = new Message();
-                        message.what = SHOW_PICTURE;
-                        handler.sendMessage(message);
+                if (topicsFromJsonList != null) {
+                    for (int i = 0; i < topicsFromJsonList.size(); i++) {//获取头像图片
+                        try {
+                            TopicsFromJson topicsFromJson = topicsFromJsonList.get(i);
+                            topicsFromJson.setAvatar_mini(ConnectInternet.getPicture("http:" + topicsFromJson.member.getAvatar_mini()));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            Message message = new Message();
+                            message.what = SHOW_PICTURE;
+                            handler.sendMessage(message);
+                        }
                     }
                 }
             }

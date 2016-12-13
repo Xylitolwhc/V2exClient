@@ -11,6 +11,15 @@ public class ContentDetail {
     private String username = null, imageUrl = null, detail = null, title = null, replyContentHtml = null;
     private Bitmap idImage = null;
     private Spanned replyContent = null;
+    private int floor = 0;
+
+    public int getFloor() {
+        return floor;
+    }
+
+    public void setFloor(int floor) {
+        this.floor = floor;
+    }
 
     public String getReplyContentHtml() {
         return replyContentHtml;

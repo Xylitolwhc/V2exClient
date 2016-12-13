@@ -2,7 +2,6 @@ package Net;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -11,6 +10,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.markdown4j.Markdown4jProcessor;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -22,6 +22,7 @@ import java.util.List;
 
 import FromGson.GsonUtil;
 import Items.ContentDetail;
+import Items.Nodes;
 import Items.TopicsFromJson;
 import Items.TopicsFromJsoup;
 
@@ -30,19 +31,8 @@ import Items.TopicsFromJsoup;
  */
 
 public class ConnectInternet {
-    private static ConnectInternet connectInternet = null;
 
-    private ConnectInternet() {
-    }
-
-    public static ConnectInternet getInstance() {
-        if (connectInternet == null) {
-            connectInternet = new ConnectInternet();
-        }
-        return connectInternet;
-    }
-
-    public List<TopicsFromJson> getTheHottestList(String url) throws Exception {
+    public static List<TopicsFromJson> getTheHottestList(String url) throws Exception {
         List<TopicsFromJson> topicsFromJsonList = new ArrayList<>();
 
         HttpURLConnection connection = null;
@@ -56,7 +46,8 @@ public class ConnectInternet {
         }
     }
 
-    private String getHTML(String url) throws Exception {
+    private static String getHTML(String url) throws Exception {
+        url = url.replace(" ", "").replace("http:", "https:");
         HttpURLConnection connection = null;
         StringBuilder response = new StringBuilder();
         try {
@@ -72,53 +63,68 @@ public class ConnectInternet {
                 response.append(line);
             }
         } finally {
+            Log.d("HTML", response.toString());
             connection.disconnect();
             return response.toString();
         }
     }
 
-    public List<ContentDetail> getContentDetailList(String url) throws Exception {
+    public static List<ContentDetail> getContentDetailList(String url) throws Exception {
         List<ContentDetail> contentDetailList = new ArrayList<>();
         try {
-            Document document = Jsoup.parse(getHTML(url));
-            Element poster = document.getElementsByClass("box").get(0);
-
-            ContentDetail posterDetail = new ContentDetail();
-            posterDetail.setImageUrl(poster.select("img[src]").attr("src").toString());
-            posterDetail.setTitle(poster.getElementsByTag("h1").text().toString());
-            posterDetail.setUsername(poster.getElementsByClass("gray").select("a[href]").first().text().toString());
-            posterDetail.setReplyContent(Html.fromHtml(poster.select("div.topic_content").html()));
-            posterDetail.setReplyContentHtml(poster.select("div.topic_content").html());
-            contentDetailList.add(posterDetail);
-
-            if (document.getElementsByClass("box").size() > 1) {
-                Element allReplies = document.getElementsByClass("box").get(1);
-                Elements allUsers = allReplies.getElementsByClass("cell");
-                for (int i = 0; i < allUsers.size(); i++) {
-                    if (allUsers.get(i).id().toString().length() != 0) {
-                        contentDetailList.add(getContentDetail(allUsers.get(i)));
-                    }
-                }
-                if (!allReplies.select("div.inner").text().equals("目前尚无回复")) {
-                    Element firstComment = document.getElementsByClass("inner").first();
-                    contentDetailList.add(getContentDetail(firstComment));
+            int page = 1, lastReply = 0, theEndReply = 0;
+            if (page == 1) {
+                Markdown4jProcessor markdown4jProcessor = new Markdown4jProcessor();
+                Document document = Jsoup.parse(getHTML(url + "?p=1"));
+                Element poster = document.getElementsByClass("box").get(0);
+                ContentDetail posterDetail = new ContentDetail();
+                posterDetail.setImageUrl(poster.select("img[src]").attr("src").toString());
+                posterDetail.setTitle(poster.getElementsByTag("h1").text().toString());
+                posterDetail.setUsername(poster.getElementsByClass("gray").select("a[href]").first().text().toString());
+                posterDetail.setReplyContent(Html.fromHtml(poster.select("div.topic_content").html()));
+                posterDetail.setReplyContentHtml(markdown4jProcessor.process(poster.select("div.topic_content").html()));
+                contentDetailList.add(posterDetail);
+                if (!document.getElementsByClass("box").get(1).select("div.inner").text().equals("目前尚无回复")) {
+                    Element allReplies = document.getElementsByClass("box").get(1).getElementsByClass("gray").first();
+                    posterDetail.setDetail(Html.fromHtml(allReplies.html()).toString());
+                    lastReply = Integer.valueOf(allReplies.text().substring(0, allReplies.text().indexOf("回复")).replace(" ", ""));
                 }
             }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            do {
+                Document document = Jsoup.parse(getHTML(url + "?p=" + page));
+                if (document.getElementsByClass("box").size() > 1) {
+                    Element allReplies = document.getElementsByClass("box").get(1);
+                    Elements allUsers = allReplies.getElementsByClass("cell");
+                    for (int i = 0; i < allUsers.size(); i++) {
+                        if (allUsers.get(i).id().toString().length() != 0) {
+                            contentDetailList.add(getContentDetail(allUsers.get(i)));
+                        }
+                    }
+                    if (!allReplies.select("div.inner").text().equals("目前尚无回复")) {
+                        Element firstComment = document.getElementsByClass("inner").first();
+                        ContentDetail contentDetail = getContentDetail(firstComment);
+                        theEndReply = contentDetail.getFloor();
+                        contentDetailList.add(contentDetail);
+                    }
+                }
+                page++;
+            } while (lastReply != theEndReply);
         } finally {
             return contentDetailList;
         }
     }
 
-    private ContentDetail getContentDetail(Element content) {
+    private static ContentDetail getContentDetail(Element content) throws Exception {
+        Markdown4jProcessor markdown4jProcessor = new Markdown4jProcessor();
         String imgUrl = content.select("img[src]").first().attr("src").toString();
         Spanned replyContent = Html.fromHtml(content.select("div.reply_content").html());
+//        String replyContentHtml = content.select("div.reply_content").html();
+//        String replyContentHtml = markdown4jProcessor.process(content.select("div.reply_content").html());
         String replyContentHtml = content.select("div.reply_content").html();
+
         String userName = content.select("a[href]").first().text();
         String detail = content.getElementsByClass("fade small").first().text().toString();
+        int floor = Integer.valueOf(content.getElementsByClass("no").first().text());
 
         ContentDetail contentDetail = new ContentDetail();
         contentDetail.setReplyContent(replyContent);
@@ -126,13 +132,15 @@ public class ConnectInternet {
         contentDetail.setUsername(userName);
         contentDetail.setImageUrl(imgUrl);
         contentDetail.setDetail(detail);
+        contentDetail.setFloor(floor);
         return contentDetail;
     }
 
-    public List<TopicsFromJsoup> getTopicsFromJsoup(String url) throws Exception {
+    public static List<TopicsFromJsoup> getTopicsFromJsoup(String url) {
+        String newurl = url.replace(" ", "").replace("http:", "https:");
         List<TopicsFromJsoup> topicsFromJsoupList = new ArrayList<>();
         try {
-            Document document = Jsoup.parse(getHTML(url));
+            Document document = Jsoup.parse(getHTML(newurl));
             Elements topics = document.getElementsByClass("cell").select("tbody");
             for (int i = 0; i < topics.size(); i++) {
                 Element topic = topics.get(i);
@@ -155,26 +163,48 @@ public class ConnectInternet {
                 topicsFromJsoupList.add(topicsFromJsoup);
             }
         } catch (Exception e) {
+            Log.d("WrongUrl", url + ",newUrl:" + newurl);
             e.printStackTrace();
         } finally {
             return topicsFromJsoupList;
         }
     }
 
-    public Bitmap getPicture(String imgUrl) throws Exception {
+    public static Bitmap getPicture(String imgUrl) {
         HttpURLConnection connection = null;
         Bitmap bitmap = null;
+        imgUrl = imgUrl.replace(" ", "");
+        if (!imgUrl.substring(0, 4).equals("http")) {
+            imgUrl = "http:" + imgUrl;
+        }
         try {
             URL imgurl = new URL(imgUrl);
             connection = (HttpURLConnection) imgurl.openConnection();
             connection.setRequestMethod("GET");
-            connection.setConnectTimeout(8000);
-            connection.setReadTimeout(8000);
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(10000);
             InputStream In = connection.getInputStream();
             bitmap = BitmapFactory.decodeStream(In);
+        } catch (Exception e) {
+            Log.d("WrongImgUrl", imgUrl);
+            e.printStackTrace();
         } finally {
             connection.disconnect();
             return bitmap;
+        }
+    }
+
+    public static List<Nodes> nodesList(String url) {
+        List<Nodes> nodesList = new ArrayList<>();
+
+        HttpURLConnection connection = null;
+        try {
+            nodesList = GsonUtil.parseNodesJsonArrayWithGson(getHTML(url));
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+            return nodesList;
         }
     }
 }

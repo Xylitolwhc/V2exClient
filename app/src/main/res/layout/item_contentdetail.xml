@@ -3,64 +3,65 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/detailcarview"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
     android:orientation="vertical">
 
-    <!--<android.support.v7.widget.CardView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:foreground="?android:attr/selectableItemBackground"-->
-        <!--android:clickable="true"-->
-        <!--android:layout_marginBottom="6dp"-->
-        <!--android:layout_marginTop="1dp"-->
-        <!--card_view:cardElevation="4dp">-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/contentDetailIdImage"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:paddingStart="10dp" />
+
+        <TextView
+            android:id="@+id/contentDetailUsername"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:paddingLeft="10dp"
+            android:text="Username"
+            android:textColor="@color/colorUserName"
+            android:textSize="15dp"
+            android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+        <TextView
+            android:id="@+id/contentDetailDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingLeft="5dp"
+            android:text="*Detail"
+            android:textSize="10dp" />
 
-                <ImageView
-                    android:id="@+id/contentDetailIdImage"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:paddingStart="10dp" />
-
-                <TextView
-                    android:id="@+id/contentDetailUsername"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingLeft="5dp"
-                    android:textSize="15dp"
-                    android:textStyle="bold"
-                    android:text="Username" />
-
-                <TextView
-                    android:id="@+id/contentDetailDetail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingLeft="5dp"
-                    android:textSize="10dp"
-                    android:text="*Detail" />
-            </LinearLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/contentDetailContent"
-                android:layout_width="match_parent"
+                android:id="@+id/contentDetailFloor"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:paddingRight="10dp"
-                android:paddingTop="0dp"
-                android:text="Content"
-                android:textSize="15dp" />
-        </LinearLayout>
-    <!--</android.support.v7.widget.CardView>-->
+                android:text="1楼" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/contentDetailContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="0dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:text="Content"
+        android:textIsSelectable="true"
+        android:textSize="15dp" />
 </LinearLayout>

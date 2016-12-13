@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.markdown4j.Markdown4jProcessor;
+
 import java.util.List;
 
 import Items.ContentDetail;
@@ -41,7 +43,7 @@ public class ContentDetailAdapter extends RecyclerView.Adapter<ContentDetailView
             return TYPE_HEADER;
         } else if (contentDetailList.size() != 1 && position < contentDetailList.size()) {
             return TYPE_NORMAL;
-        } else if (contentDetailList.size()==1) {
+        } else if (contentDetailList.size() == 1) {
             return TYPE_EMPTY;
         } else {
             return TYPE_END;
@@ -72,17 +74,24 @@ public class ContentDetailAdapter extends RecyclerView.Adapter<ContentDetailView
                 case TYPE_HEADER: {
                     ContentDetail contentDetail = contentDetailList.get(position);
                     holder.contentDetailTitle.setText(contentDetail.getTitle());
+                    if (contentDetail.getDetail()==null) {
+                        holder.contentDetailDetail.setVisibility(View.GONE);
+                    } else {
+                        holder.contentDetailDetail.setText(contentDetail.getDetail());
+                    }
                 }
                 case TYPE_NORMAL: {
                     ContentDetail contentDetail = contentDetailList.get(position);
                     holder.contentDetailContent.setText(contentDetail.getReplyContent());
-//                    holder.contentDetailContent.setAutoLinkMask(Linkify.ALL);
                     holder.contentDetailContent.setMovementMethod(LinkMovementMethod.getInstance());
                     holder.contentDetailUsername.setText(contentDetail.getUsername());
                     holder.contentDetailUsername.getPaint().setFakeBoldText(true);
-                    if (contentDetail.getIdImage()!=null){
-                    holder.contentDetailIdImage.setImageBitmap(contentDetail.getIdImage());}
-                    else{
+                    if (position > 0) {
+                        holder.contentDetailFloor.setText(contentDetail.getFloor() + "楼");
+                    }
+                    if (contentDetail.getIdImage() != null) {
+                        holder.contentDetailIdImage.setImageBitmap(contentDetail.getIdImage());
+                    } else {
                         holder.contentDetailIdImage.setImageResource(R.mipmap.v2exlogo);
                     }
                     holder.contentDetailDetail.setText(contentDetail.getDetail());
@@ -106,7 +115,7 @@ public class ContentDetailAdapter extends RecyclerView.Adapter<ContentDetailView
 
 class ContentDetailViewHolder extends RecyclerView.ViewHolder {
 
-    protected TextView contentDetailUsername, contentDetailDetail, contentDetailContent, contentDetailTitle;
+    protected TextView contentDetailUsername, contentDetailDetail, contentDetailContent, contentDetailTitle, contentDetailFloor;
     protected ImageView contentDetailIdImage;
     protected int TYPE;
 
@@ -124,6 +133,7 @@ class ContentDetailViewHolder extends RecyclerView.ViewHolder {
             contentDetailDetail = (TextView) itemView.findViewById(R.id.contentDetailDetail);
             contentDetailContent = (TextView) itemView.findViewById(R.id.contentDetailContent);
             contentDetailIdImage = (ImageView) itemView.findViewById(R.id.contentDetailIdImage);
+            contentDetailFloor = (TextView) itemView.findViewById(R.id.contentDetailFloor);
         }
     }
 }

@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class nodesSQLiteOpenHelper extends SQLiteOpenHelper {
+    final String creat="CREATE Table Nodes";
 
 
     public nodesSQLiteOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
