@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +47,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
                 Toast.makeText(context, "Image:" + position, Toast.LENGTH_SHORT).show();
             }
         });
-        holder.cardViewItem.setOnClickListener(new View.OnClickListener() {
+        holder.linearLayoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ContentDetailActivity.class);
@@ -75,7 +76,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 class MyViewHolder extends RecyclerView.ViewHolder {
     TextView theHottestTitle, theHottestContent, theId, theReplies;
     ImageView theIdImage;
-    CardView cardViewItem;
+    LinearLayout linearLayoutItem;
 
     public MyViewHolder(View itemView) {
         super(itemView);
@@ -84,6 +85,6 @@ class MyViewHolder extends RecyclerView.ViewHolder {
         theId = (TextView) itemView.findViewById(R.id.theId);
         theReplies = (TextView) itemView.findViewById(R.id.theReplies);
         theIdImage = (ImageView) itemView.findViewById(R.id.theIdImage);
-        cardViewItem = (CardView) itemView.findViewById(R.id.cardViewItem);
+        linearLayoutItem=(LinearLayout)itemView.findViewById(R.id.linearLayoutItem);
     }
 }

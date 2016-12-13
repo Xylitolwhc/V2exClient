@@ -12,12 +12,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import Adapters.JsoupItemAdapter;
+import Items.RecycleViewDivider;
 import Items.TopicsFromJsoup;
 import Net.ConnectInternet;
 import whc.uniquestudio.v2exclient.R;
@@ -76,6 +78,7 @@ public class JsoupFragments extends Fragment {
 
         recyclerViewOfTheJsoup.setLayoutManager(new LinearLayoutManager(context));
         recyclerViewOfTheJsoup.setAdapter(jsoupItemAdapter);
+        recyclerViewOfTheJsoup.addItemDecoration(new RecycleViewDivider(context, LinearLayout.HORIZONTAL, R.drawable.divider));
 
         url = getArguments().getString("url");
         ConnectInternet(url);

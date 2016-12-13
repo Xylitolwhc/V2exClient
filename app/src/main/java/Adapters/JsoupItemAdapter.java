@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -33,12 +34,13 @@ public class JsoupItemAdapter extends RecyclerView.Adapter<MyJsoupViewHolder> {
     @Override
     public void onBindViewHolder(MyJsoupViewHolder holder, final int position) {
         final TopicsFromJsoup topicsFromJsoup = topicsFromJsoupList.get(position);
-        holder.theJsoupUsername.setText(topicsFromJsoup.getUsername());
-        holder.theJsoupTitle.setText(topicsFromJsoup.getTitle());
-        holder.theJsoupDetail.setText(topicsFromJsoup.getDetail());
-        holder.theJsoupLastReply.setText(topicsFromJsoup.getLastReply());
-        holder.theJsoupUserImg.setImageBitmap(topicsFromJsoup.getBitmap());
-        holder.theJsoupCardView.setOnClickListener(new View.OnClickListener() {
+        holder.theId.setText(topicsFromJsoup.getUsername());
+        holder.theHottestTitle.setText(topicsFromJsoup.getTitle());
+        holder.theHottestContent.setVisibility(View.GONE);
+        holder.theId.setText(topicsFromJsoup.getUsername());
+        holder.theReplies.setText("Replies:"+topicsFromJsoup.getReplies());
+        holder.theIdImage.setImageBitmap(topicsFromJsoup.getBitmap());
+        holder.linearLayoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ContentDetailActivity.class);
@@ -50,7 +52,7 @@ public class JsoupItemAdapter extends RecyclerView.Adapter<MyJsoupViewHolder> {
 
     @Override
     public MyJsoupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MyJsoupViewHolder holder = new MyJsoupViewHolder(LayoutInflater.from(context).inflate(R.layout.item_topic_jsoup, parent, false));
+        MyJsoupViewHolder holder = new MyJsoupViewHolder(LayoutInflater.from(context).inflate(R.layout.item_topic, parent, false));
         return holder;
     }
 
@@ -62,18 +64,17 @@ public class JsoupItemAdapter extends RecyclerView.Adapter<MyJsoupViewHolder> {
 }
 
 class MyJsoupViewHolder extends RecyclerView.ViewHolder {
-    TextView theJsoupTitle, theJsoupUsername, theJsoupDetail, theJsoupLastReply, theJsoupReplies;
-    ImageView theJsoupUserImg;
-    CardView theJsoupCardView;
+    TextView theHottestTitle, theHottestContent, theId, theReplies;
+    ImageView theIdImage;
+    LinearLayout linearLayoutItem;
 
     public MyJsoupViewHolder(View itemView) {
         super(itemView);
-        theJsoupTitle = (TextView) itemView.findViewById(R.id.theJsoupTitle);
-        theJsoupUsername = (TextView) itemView.findViewById(R.id.theJsoupUsername);
-        theJsoupDetail = (TextView) itemView.findViewById(R.id.theJsoupDetail);
-        theJsoupLastReply = (TextView) itemView.findViewById(R.id.theJsoupLastReply);
-        theJsoupReplies = (TextView) itemView.findViewById(R.id.theJsoupReplies);
-        theJsoupUserImg = (ImageView) itemView.findViewById(R.id.theJsoupUserImg);
-        theJsoupCardView = (CardView) itemView.findViewById(R.id.theJsoupCardView);
+        theHottestTitle = (TextView) itemView.findViewById(R.id.theHottestTitle);
+        theHottestContent = (TextView) itemView.findViewById(R.id.theHottestContent);
+        theId = (TextView) itemView.findViewById(R.id.theId);
+        theReplies = (TextView) itemView.findViewById(R.id.theReplies);
+        theIdImage = (ImageView) itemView.findViewById(R.id.theIdImage);
+        linearLayoutItem=(LinearLayout)itemView.findViewById(R.id.linearLayoutItem);
     }
 }

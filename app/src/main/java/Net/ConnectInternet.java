@@ -63,7 +63,6 @@ public class ConnectInternet {
                 response.append(line);
             }
         } finally {
-            Log.d("HTML", response.toString());
             connection.disconnect();
             return response.toString();
         }
@@ -144,22 +143,24 @@ public class ConnectInternet {
             Elements topics = document.getElementsByClass("cell").select("tbody");
             for (int i = 0; i < topics.size(); i++) {
                 Element topic = topics.get(i);
+                Log.d("topics",topic.html());
                 String imgUrl = topic.select("img[src]").first().attr("src").toString();
                 String title = topic.getElementsByClass("item_title").first().select("a[href]").text().toString();
                 String itemUrl = "https://www.v2ex.com" + topic.getElementsByClass("item_title").first().select("a[href]").attr("href").toString();
-                String detail = topic.getElementsByClass("small fade").first().text().toString();
+                String username = topic.getElementsByClass("small fade").first().select("strong").text();
                 //String username = topic.getElementsByClass("small fade").first().text().toString();
-                String Replies = "";
-                if (topic.hasClass("count_livid")) {
-                    Replies = topic.getElementsByClass("count_livid").first().text().toString();
+                int Replies = 0;
+                if (!topic.select(".count_livid").html().equals("")){
+                    Replies=Integer.valueOf(topic.select(".count_livid").html().replace(" ",""));
                 }
+                Log.d("Replies",topic.select(".count_livid").html());
                 TopicsFromJsoup topicsFromJsoup = new TopicsFromJsoup();
                 topicsFromJsoup.setImgUrl(imgUrl);
                 topicsFromJsoup.setTitle(title);
                 topicsFromJsoup.setUrl(itemUrl);
                 // topicsFromJsoup.setUsername(username);
-                topicsFromJsoup.setDetail(detail);
-                topicsFromJsoup.setLastReply(Replies);
+                topicsFromJsoup.setUsername(username);
+                topicsFromJsoup.setReplies(Replies);
                 topicsFromJsoupList.add(topicsFromJsoup);
             }
         } catch (Exception e) {
@@ -182,7 +183,6 @@ public class ConnectInternet {
             connection = (HttpURLConnection) imgurl.openConnection();
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(10000);
-            connection.setReadTimeout(10000);
             InputStream In = connection.getInputStream();
             bitmap = BitmapFactory.decodeStream(In);
         } catch (Exception e) {

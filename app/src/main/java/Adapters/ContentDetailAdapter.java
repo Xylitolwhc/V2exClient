@@ -74,6 +74,7 @@ public class ContentDetailAdapter extends RecyclerView.Adapter<ContentDetailView
                 case TYPE_HEADER: {
                     ContentDetail contentDetail = contentDetailList.get(position);
                     holder.contentDetailTitle.setText(contentDetail.getTitle());
+                    holder.contentDetailTitle.getPaint().setFakeBoldText(true);
                     if (contentDetail.getDetail()==null) {
                         holder.contentDetailDetail.setVisibility(View.GONE);
                     } else {

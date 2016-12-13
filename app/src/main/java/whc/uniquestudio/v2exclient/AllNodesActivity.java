@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,8 +27,8 @@ import Net.ConnectInternet;
 
 public class AllNodesActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private List<Nodes> nodesList=new ArrayList<>();
-    private nodesAdapter nodesAdapter = new nodesAdapter(AllNodesActivity.this, nodesList);
+    private List<Nodes> nodesList = new ArrayList<>();
+    private nodesAdapter nodesAdapter;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -41,11 +42,15 @@ public class AllNodesActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_allnodes);
+
+        getSupportActionBar().setTitle("NODES");
+
         recyclerView = (RecyclerView) findViewById(R.id.nodesRecyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.addItemDecoration(new RecycleViewDivider(this, LinearLayout.VERTICAL));
         recyclerView.addItemDecoration(new RecycleViewDivider(this, LinearLayout.HORIZONTAL));
 
+        nodesAdapter = new nodesAdapter(AllNodesActivity.this, nodesList);
         recyclerView.setAdapter(nodesAdapter);
         connectInternet();
     }
@@ -64,6 +69,11 @@ public class AllNodesActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        sendResult();
         super.onBackPressed();
+    }
+    private void sendResult(){
+        Intent intent=new Intent();
+        setResult(1,intent);
     }
 }

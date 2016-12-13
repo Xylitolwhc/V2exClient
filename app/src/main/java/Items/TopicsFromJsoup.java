@@ -9,6 +9,15 @@ import android.graphics.Bitmap;
 public class TopicsFromJsoup {
     private Bitmap bitmap = null;
     private String title = null, url = null, content = null, username = null, detail = null, imgUrl = null, lastReply = null;
+    private int Replies=0;
+
+    public int getReplies() {
+        return Replies;
+    }
+
+    public void setReplies(int replies) {
+        Replies = replies;
+    }
 
     public Bitmap getBitmap() {
         return bitmap;

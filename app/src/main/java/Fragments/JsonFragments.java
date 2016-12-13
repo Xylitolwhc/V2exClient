@@ -12,14 +12,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import Adapters.MyAdapter;
+import Items.RecycleViewDivider;
 import Items.TopicsFromJson;
 import Net.ConnectInternet;
+import whc.uniquestudio.v2exclient.MainActivity;
 import whc.uniquestudio.v2exclient.R;
 
 /**
@@ -76,7 +79,7 @@ public class JsonFragments extends android.support.v4.app.Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(myAdapter);
-
+        recyclerView.addItemDecoration(new RecycleViewDivider(context, LinearLayout.HORIZONTAL, R.drawable.divider));
         url = getArguments().getString("url");
         ConnectInternet(url);
         swipeRefreshLayoutOfTheHottest.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

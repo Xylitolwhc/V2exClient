@@ -57,6 +57,8 @@ public class nodesAdapter extends RecyclerView.Adapter<nodesAdapter.NodesViewHol
         holder.nodes_topic_number.setText(node.getTopics() + "");
         if (sharedPreferences.contains(node.getName())){
             holder.nodes_switch.setChecked(true);
+        }else{
+            holder.nodes_switch.setChecked(false);
         }
         holder.nodes_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

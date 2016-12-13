@@ -4,95 +4,82 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="2dp">
+    android:background="#FFF"
+    android:id="@+id/linearLayoutItem"
+    android:padding="8dp">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardViewItem"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:layout_marginTop="3dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="7dp"
-        android:padding="5dp"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="4dp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="30dp"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/theIdImage"
+                android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:orientation="horizontal">
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp" />
 
-                <ImageView
-                    android:id="@+id/theIdImage"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:paddingLeft="5dp"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp" />
+            <TextView
+                android:id="@+id/theId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:text="id" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
 
                 <TextView
-                    android:id="@+id/theId"
+                    android:id="@+id/theReplies"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="5dp"
-                    android:layout_gravity="center"
-                    android:text="id" />
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center">
-
-                    <TextView
-                        android:id="@+id/theReplies"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:paddingRight="5dp"
-                        android:text="replies:10" />
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="#AAA" />
-
-            <TextView
-                android:id="@+id/theHottestTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:paddingLeft="5dp"
-                android:text="Title"
-                android:textColor="@color/colorTitle"
-                android:textSize="20dp" />
-
-            <TextView
-                android:id="@+id/theHottestContent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="2dp"
-                android:paddingLeft="5dp"
-                android:layout_marginBottom="10dp"
-                android:text="Content"
-                android:maxLines="2"
-                android:textSize="15dp" />
+                    android:layout_alignParentRight="true"
+                    android:paddingRight="5dp"
+                    android:text="replies:10" />
+            </RelativeLayout>
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="#AAA" />
+
+        <TextView
+            android:id="@+id/theHottestTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:text="Title"
+            android:textColor="@color/colorTitle"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/theHottestContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:maxLines="2"
+            android:paddingLeft="5dp"
+            android:paddingTop="2dp"
+            android:text="Content"
+            android:textSize="15dp" />
+
+    </LinearLayout>
+
 
 </LinearLayout>
