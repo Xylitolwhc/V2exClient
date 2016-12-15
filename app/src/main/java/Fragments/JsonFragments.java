@@ -18,10 +18,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import ActivityView.FragmentView;
 import Adapters.MyAdapter;
 import Items.RecycleViewDivider;
 import Items.TopicsFromJson;
 import Net.ConnectInternet;
+import Presenter.PagesFragmentPresenter;
 import whc.uniquestudio.v2exclient.MainActivity;
 import whc.uniquestudio.v2exclient.R;
 
@@ -29,108 +31,51 @@ import whc.uniquestudio.v2exclient.R;
  * Created by 吴航辰 on 2016/12/3.
  */
 
-public class JsonFragments extends android.support.v4.app.Fragment {
+public class JsonFragments extends android.support.v4.app.Fragment implements FragmentView{
 
     private static final int SHOW_RESPONSE = 0;
     private static final int CONNECT_FAILED = 1;
     private static final int SHOW_PICTURE = 2;
 
-    private String url;
-    private Context context;
     private RecyclerView recyclerView;
-    private List<TopicsFromJson> topicsFromJsonList;
-    private MyAdapter myAdapter;
     private SwipeRefreshLayout swipeRefreshLayoutOfTheHottest;
-
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case SHOW_RESPONSE: {
-                    myAdapter = new MyAdapter(context, topicsFromJsonList);
-                    recyclerView.setAdapter(myAdapter);
-                    myAdapter.notifyDataSetChanged();
-                    getPicture();
-                    break;
-                }
-                case CONNECT_FAILED: {
-                    Toast.makeText(context, "刷新失败", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                case SHOW_PICTURE: {
-                    myAdapter.notifyDataSetChanged();
-                    break;
-                }
-            }
-            swipeRefreshLayoutOfTheHottest.setRefreshing(false);
-        }
-    };
+    private PagesFragmentPresenter pagesFragmentPresenter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_topics_gson, container, false);
 
-        context = getActivity();
-        topicsFromJsonList = new ArrayList<>();
-        myAdapter = new MyAdapter(context, topicsFromJsonList);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewOfTheHottest);
         swipeRefreshLayoutOfTheHottest = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayoutOfTheHottest);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(myAdapter);
-        recyclerView.addItemDecoration(new RecycleViewDivider(context, LinearLayout.HORIZONTAL, R.drawable.divider));
-        url = getArguments().getString("url");
-        ConnectInternet(url);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.addItemDecoration(new RecycleViewDivider(getActivity(), LinearLayout.HORIZONTAL, R.drawable.divider));
+
+        pagesFragmentPresenter=new PagesFragmentPresenter(getActivity(),this,getArguments().getString("url"));
+
+
+        swipeRefreshLayoutOfTheHottest.setRefreshing(true);
+        pagesFragmentPresenter.refresh();
+
         swipeRefreshLayoutOfTheHottest.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ConnectInternet(url);
+                pagesFragmentPresenter.refresh();
             }
         });
 
         return view;
     }
 
-    private void ConnectInternet(final String url) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    topicsFromJsonList = ConnectInternet.getTheHottestList(url);
-
-                    Message message = new Message();
-                    message.what = SHOW_RESPONSE;
-                    handler.sendMessage(message);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Message message = new Message();
-                    message.what = CONNECT_FAILED;
-                    handler.sendMessage(message);
-                }
-            }
-        }).start();
+    @Override
+    public void setAdapter(MyAdapter recyclerViewAdapter) {
+        recyclerView.setAdapter(recyclerViewAdapter);
     }
 
-    private void getPicture() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (topicsFromJsonList != null) {
-                    for (int i = 0; i < topicsFromJsonList.size(); i++) {//获取头像图片
-                        try {
-                            TopicsFromJson topicsFromJson = topicsFromJsonList.get(i);
-                            topicsFromJson.setAvatar_mini(ConnectInternet.getPicture("http:" + topicsFromJson.member.getAvatar_mini()));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            Message message = new Message();
-                            message.what = SHOW_PICTURE;
-                            handler.sendMessage(message);
-                        }
-                    }
-                }
-            }
-        }).start();
+    @Override
+    public void endFresh() {
+        swipeRefreshLayoutOfTheHottest.setRefreshing(false);
     }
 }

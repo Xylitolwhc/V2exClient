@@ -21,7 +21,7 @@ import whc.uniquestudio.v2exclient.R;
  * Created by 吴航辰 on 2016/12/11.
  */
 
-public class nodesAdapter extends RecyclerView.Adapter<nodesAdapter.NodesViewHolder> {
+public class nodesAdapter extends RecyclerView.Adapter<NodesViewHolder> {
     private Context context;
     private List<Nodes> nodesList;
     private SharedPreferences sharedPreferences;
@@ -29,7 +29,6 @@ public class nodesAdapter extends RecyclerView.Adapter<nodesAdapter.NodesViewHol
     public nodesAdapter(Context context, List<Nodes> nodesList) {
         this.context = context;
         this.nodesList = nodesList;
-        sharedPreferences = context.getSharedPreferences("nodes", Context.MODE_APPEND);
     }
 
     @Override
@@ -41,11 +40,18 @@ public class nodesAdapter extends RecyclerView.Adapter<nodesAdapter.NodesViewHol
     @Override
     public void onBindViewHolder(NodesViewHolder holder, int position) {
         final Nodes node = nodesList.get(position);
+        sharedPreferences = context.getSharedPreferences("nodes", Context.MODE_APPEND);
+        Log.d("sharedPreferences",sharedPreferences.getAll().toString());
+
         holder.nodes_name.setText(node.getName());
         if (node.getHeader() != null) {
+            holder.nodes_content_header.setVisibility(View.VISIBLE);
+            holder.nodes_devider.setVisibility(View.VISIBLE);
             holder.nodes_content_header.setText(node.getHeader());
             if (node.getFooter() != null) {
                 holder.nodes_content_footer.setText(Html.fromHtml(node.getFooter()));
+                holder.nodes_content_footer.setVisibility(View.VISIBLE);
+                holder.nodes_devider.setVisibility(View.VISIBLE);
             } else {
                 holder.nodes_content_footer.setVisibility(View.GONE);
             }
@@ -55,20 +61,20 @@ public class nodesAdapter extends RecyclerView.Adapter<nodesAdapter.NodesViewHol
             holder.nodes_content_footer.setVisibility(View.GONE);
         }
         holder.nodes_topic_number.setText(node.getTopics() + "");
-        if (sharedPreferences.contains(node.getName())){
+
+        if (sharedPreferences.contains(node.getName())) {
             holder.nodes_switch.setChecked(true);
-        }else{
+        } else {
             holder.nodes_switch.setChecked(false);
         }
-        holder.nodes_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.onCheckedChangeListener=new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 SharedPreferences.Editor editor = sharedPreferences.edit();
+                Log.d(node.getName(),isChecked+"");
+                Log.d("Data", sharedPreferences.getAll().toString());
                 if (isChecked) {
-                    Log.d("Data", sharedPreferences.getAll().toString());
                     int nodes_number = sharedPreferences.getInt("nodes_number", 1);
-
                     editor.putString("" + (nodes_number + 1), node.getName());
                     editor.putString(node.getName(), node.getUrl());
                     editor.putInt("nodes_number", nodes_number + 1);
@@ -82,28 +88,31 @@ public class nodesAdapter extends RecyclerView.Adapter<nodesAdapter.NodesViewHol
                     editor.putInt("nodes_number", sharedPreferences.getInt("node_number", 1) - 1);
                 }
                 editor.commit();
+                Log.d("sharedPreferences",sharedPreferences.getAll().toString());
             }
-        });
+        };
+        holder.nodes_switch.setOnCheckedChangeListener(holder.onCheckedChangeListener);
     }
 
     @Override
     public int getItemCount() {
         return nodesList.size();
     }
+}
 
-    class NodesViewHolder extends RecyclerView.ViewHolder {
-        TextView nodes_name, nodes_topic_number, nodes_content_header, nodes_content_footer;
-        Switch nodes_switch;
-        View nodes_devider;
+class NodesViewHolder extends RecyclerView.ViewHolder {
+    TextView nodes_name, nodes_topic_number, nodes_content_header, nodes_content_footer;
+    Switch nodes_switch;
+    View nodes_devider;
+    CompoundButton.OnCheckedChangeListener onCheckedChangeListener;
 
-        public NodesViewHolder(View itemView) {
-            super(itemView);
-            nodes_name = (TextView) itemView.findViewById(R.id.nodes_name);
-            nodes_topic_number = (TextView) itemView.findViewById(R.id.nodes_topic_number);
-            nodes_content_header = (TextView) itemView.findViewById(R.id.nodes_content_header);
-            nodes_content_footer = (TextView) itemView.findViewById(R.id.nodes_content_footer);
-            nodes_switch = (Switch) itemView.findViewById(R.id.nodes_switch);
-            nodes_devider=itemView.findViewById(R.id.nodes_devider);
-        }
+    public NodesViewHolder(View itemView) {
+        super(itemView);
+        nodes_name = (TextView) itemView.findViewById(R.id.nodes_name);
+        nodes_topic_number = (TextView) itemView.findViewById(R.id.nodes_topic_number);
+        nodes_content_header = (TextView) itemView.findViewById(R.id.nodes_content_header);
+        nodes_content_footer = (TextView) itemView.findViewById(R.id.nodes_content_footer);
+        nodes_switch = (Switch) itemView.findViewById(R.id.nodes_switch);
+        nodes_devider = itemView.findViewById(R.id.nodes_devider);
     }
 }
