@@ -5,38 +5,29 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import Adapters.nodesAdapter;
+import ActivityView.NodesView;
+import Adapters.NodesAdapter;
 import Items.Nodes;
 import Items.RecycleViewDivider;
 import Net.ConnectInternet;
+import Presenter.NodesPresenter;
+import Presenter.NodesPresenterMain;
 
 /**
  * Created by 吴航辰 on 2016/12/10.
  */
 
-public class AllNodesActivity extends AppCompatActivity {
+public class AllNodesActivity extends AppCompatActivity implements NodesView{
     private RecyclerView recyclerView;
-    private List<Nodes> nodesList = new ArrayList<>();
-    private nodesAdapter nodesAdapter;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            nodesAdapter = new nodesAdapter(AllNodesActivity.this, nodesList);
-            recyclerView.setAdapter(nodesAdapter);
-            nodesAdapter.notifyDataSetChanged();
-        }
-    };
+    private NodesPresenter nodesPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,21 +41,13 @@ public class AllNodesActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new RecycleViewDivider(this, LinearLayout.VERTICAL));
         recyclerView.addItemDecoration(new RecycleViewDivider(this, LinearLayout.HORIZONTAL));
 
-        nodesAdapter = new nodesAdapter(AllNodesActivity.this, nodesList);
-        recyclerView.setAdapter(nodesAdapter);
-        connectInternet();
+        nodesPresenter=new NodesPresenterMain(this,this);
+        nodesPresenter.init();
     }
 
-    private void connectInternet() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                nodesList = ConnectInternet.nodesList("https://www.v2ex.com/api/nodes/all.json");
-                Message message = new Message();
-                message.what = 1;
-                handler.sendMessage(message);
-            }
-        }).start();
+    @Override
+    public void setAdapter(NodesAdapter nodesAdapter) {
+        recyclerView.setAdapter(nodesAdapter);
     }
 
     @Override

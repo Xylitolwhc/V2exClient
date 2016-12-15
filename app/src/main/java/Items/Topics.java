@@ -6,11 +6,11 @@ import android.graphics.Bitmap;
  * Created by 吴航辰 on 2016/11/24.
  */
 
-public class TopicsFromJson {
+public class Topics {
     private int id, replies, created, last_modified, last_touched;
     private String title, url, content;
-    public Member member;
-    public Node node;
+    public Member member=new Member();
+    public Node node=new Node();
     private Bitmap avatar_mini = null, avatar_normal = null, avatar_large = null;
 
     public class Member {

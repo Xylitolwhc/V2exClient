@@ -6,7 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
 import Items.Nodes;
-import Items.TopicsFromJson;
+import Items.Topics;
 
 /**
  * Created by 吴航辰 on 2016/11/25.
@@ -24,9 +24,9 @@ public class GsonUtil {
     }
 
     // 将Json数组解析成相应的映射对象列表
-    public static <T> List<TopicsFromJson> parseTopicsJsonArrayWithGson(String jsonData) {
+    public static <T> List<Topics> parseTopicsJsonArrayWithGson(String jsonData) {
         Gson gson = new Gson();
-        List<TopicsFromJson> result = gson.fromJson(jsonData, new TypeToken<List<TopicsFromJson>>() {
+        List<Topics> result = gson.fromJson(jsonData, new TypeToken<List<Topics>>() {
         }.getType());
         return result;
     }

@@ -3,22 +3,20 @@ package Presenter;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import ActivityView.FragmentView;
-import Adapters.MyAdapter;
-import Items.TopicsFromJson;
+import Adapters.TopicsAdapter;
+import Items.Topics;
 import Net.ConnectInternet;
 
 /**
  * Created by 吴航辰 on 2016/12/15.
  */
 
-public class PagesFragmentPresenter implements FragmentPresenter {
+public class FragmentPresenterMain implements FragmentPresenter {
     private static final int SHOW_RESPONSE = 0;
     private static final int CONNECT_FAILED = 1;
     private static final int SHOW_PICTURE = 2;
@@ -26,17 +24,17 @@ public class PagesFragmentPresenter implements FragmentPresenter {
     private Context context;
     private FragmentView fragmentView;
     private String url;
-    private List<TopicsFromJson> topicsFromJsonList;
-    private MyAdapter myAdapter;
+    private List<Topics> topicsFromJsonList;
+    private TopicsAdapter topicsAdapter;
 
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SHOW_RESPONSE: {
-                    myAdapter = new MyAdapter(context, topicsFromJsonList);
-                    fragmentView.setAdapter(myAdapter);
-                    myAdapter.notifyDataSetChanged();
+                    topicsAdapter = new TopicsAdapter(context, topicsFromJsonList);
+                    fragmentView.setAdapter(topicsAdapter);
+                    topicsAdapter.notifyDataSetChanged();
                     getPicture();
                     break;
                 }
@@ -45,7 +43,7 @@ public class PagesFragmentPresenter implements FragmentPresenter {
                     break;
                 }
                 case SHOW_PICTURE: {
-                    myAdapter.notifyDataSetChanged();
+                    topicsAdapter.notifyDataSetChanged();
                     break;
                 }
             }
@@ -53,7 +51,7 @@ public class PagesFragmentPresenter implements FragmentPresenter {
         }
     };
 
-    public PagesFragmentPresenter(Context context, FragmentView fragmentView,String url) {
+    public FragmentPresenterMain(Context context, FragmentView fragmentView, String url) {
         this.context = context;
         this.fragmentView = fragmentView;
         this.url=url;
@@ -96,7 +94,7 @@ public class PagesFragmentPresenter implements FragmentPresenter {
                 if (topicsFromJsonList != null) {
                     for (int i = 0; i < topicsFromJsonList.size(); i++) {//获取头像图片
                         try {
-                            TopicsFromJson topicsFromJson = topicsFromJsonList.get(i);
+                            Topics topicsFromJson = topicsFromJsonList.get(i);
                             topicsFromJson.setAvatar_mini(ConnectInternet.getPicture("http:" + topicsFromJson.member.getAvatar_mini()));
                         } catch (Exception e) {
                             e.printStackTrace();

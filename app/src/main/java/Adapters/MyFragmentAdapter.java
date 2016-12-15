@@ -23,7 +23,6 @@ public class MyFragmentAdapter extends FragmentPagerAdapter {
     }
     @Override
     public CharSequence getPageTitle(int position) {
-        Log.d("Title",titleList.get(position));
         return titleList.get(position);
     }
     @Override

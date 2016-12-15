@@ -41,7 +41,7 @@
                 android:layout_marginBottom="5dp"
                 android:background="#FFF"
                 card_view:cardCornerRadius="4dp"
-                card_view:cardElevation="4dp">
+                card_view:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"

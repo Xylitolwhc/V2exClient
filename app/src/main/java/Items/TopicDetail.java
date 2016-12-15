@@ -7,7 +7,7 @@ import android.text.Spanned;
  * Created by 吴航辰 on 2016/11/27.
  */
 
-public class ContentDetail {
+public class TopicDetail {
     private String username = null, imageUrl = null, detail = null, title = null, replyContentHtml = null;
     private Bitmap idImage = null;
     private Spanned replyContent = null;

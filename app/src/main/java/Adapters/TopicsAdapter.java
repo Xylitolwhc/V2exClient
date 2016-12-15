@@ -2,7 +2,6 @@ package Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,27 +13,27 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import Items.TopicsFromJson;
-import whc.uniquestudio.v2exclient.ContentDetailActivity;
+import Items.Topics;
+import whc.uniquestudio.v2exclient.TopicDetailActivity;
 import whc.uniquestudio.v2exclient.R;
 
 /**
  * Created by 吴航辰 on 2016/11/25.
  */
 
-public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-    private List<TopicsFromJson> topicsFromJsonList;
+public class TopicsAdapter extends RecyclerView.Adapter<TopicsViewHolder> {
+    private List<Topics> topicsFromJsonList;
     private Context context;
 
-    public MyAdapter(Context context, List<TopicsFromJson> topicsFromJsonList) {
+    public TopicsAdapter(Context context, List<Topics> topicsFromJsonList) {
         this.context = context;
         this.topicsFromJsonList = topicsFromJsonList;
     }
 
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
-        final TopicsFromJson topicsFromJson = topicsFromJsonList.get(position);
+    public void onBindViewHolder(TopicsViewHolder holder, final int position) {
+        final Topics topicsFromJson = topicsFromJsonList.get(position);
         holder.theHottestTitle.setText(topicsFromJson.getTitle());
         holder.theHottestContent.setText(topicsFromJson.getContent());
         holder.theId.setText(topicsFromJson.member.getUsername());
@@ -50,8 +49,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         holder.linearLayoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ContentDetailActivity.class);
-                intent.putExtra("url", toHTTPs(topicsFromJson.getUrl()));
+                Intent intent = new Intent(context, TopicDetailActivity.class);
+                intent.putExtra("url", topicsFromJson.getUrl());
                 context.startActivity(intent);
             }
         });
@@ -61,8 +60,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         return "https"+url.substring(4);
     }
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MyViewHolder holder = new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.item_topic, parent, false));
+    public TopicsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        TopicsViewHolder holder = new TopicsViewHolder(LayoutInflater.from(context).inflate(R.layout.item_topic, parent, false));
         return holder;
     }
 
@@ -73,12 +72,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
 }
 
-class MyViewHolder extends RecyclerView.ViewHolder {
+class TopicsViewHolder extends RecyclerView.ViewHolder {
     TextView theHottestTitle, theHottestContent, theId, theReplies;
     ImageView theIdImage;
     LinearLayout linearLayoutItem;
 
-    public MyViewHolder(View itemView) {
+    public TopicsViewHolder(View itemView) {
         super(itemView);
         theHottestTitle = (TextView) itemView.findViewById(R.id.theHottestTitle);
         theHottestContent = (TextView) itemView.findViewById(R.id.theHottestContent);

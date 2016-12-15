@@ -3,7 +3,6 @@ package whc.uniquestudio.v2exclient;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerTabStrip;
@@ -13,13 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ActivityView.PagesView;
 import Adapters.MyFragmentAdapter;
-import Fragments.JsonFragments;
-import Fragments.JsoupFragments;
 import Presenter.PagesPresenter;
 import Presenter.PagesPresenterMain;
 
@@ -70,13 +64,9 @@ public class MainActivity extends FragmentActivity implements PagesView {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        pagesPresenter.refresh();
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("On", "Resume");
+        if (resultCode==1) {
+            pagesPresenter.refresh();
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

@@ -9,30 +9,28 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.markdown4j.Markdown4jProcessor;
-
 import java.util.List;
 
-import Items.ContentDetail;
+import Items.TopicDetail;
 import whc.uniquestudio.v2exclient.R;
 
-import static Adapters.ContentDetailAdapter.TYPE_HEADER;
-import static Adapters.ContentDetailAdapter.TYPE_NORMAL;
+import static Adapters.TopicDetailAdapter.TYPE_HEADER;
+import static Adapters.TopicDetailAdapter.TYPE_NORMAL;
 
 /**
  * Created by 吴航辰 on 2016/11/26.
  */
 
-public class ContentDetailAdapter extends RecyclerView.Adapter<ContentDetailViewHolder> {
+public class TopicDetailAdapter extends RecyclerView.Adapter<ContentDetailViewHolder> {
     protected static final int TYPE_HEADER = 0;
     protected static final int TYPE_NORMAL = 1;
     protected static final int TYPE_EMPTY = 2;
     protected static final int TYPE_END = 3;
     private Context context;
-    private List<ContentDetail> contentDetailList;
+    private List<TopicDetail> contentDetailList;
 
 
-    public ContentDetailAdapter(Context context, List<ContentDetail> contentDetailList) {
+    public TopicDetailAdapter(Context context, List<TopicDetail> contentDetailList) {
         this.context = context;
         this.contentDetailList = contentDetailList;
     }
@@ -72,7 +70,7 @@ public class ContentDetailAdapter extends RecyclerView.Adapter<ContentDetailView
         if (contentDetailList.size() != 0) {
             switch (holder.TYPE) {
                 case TYPE_HEADER: {
-                    ContentDetail contentDetail = contentDetailList.get(position);
+                    TopicDetail contentDetail = contentDetailList.get(position);
                     holder.contentDetailTitle.setText(contentDetail.getTitle());
                     holder.contentDetailTitle.getPaint().setFakeBoldText(true);
                     if (contentDetail.getDetail()==null) {
@@ -82,7 +80,7 @@ public class ContentDetailAdapter extends RecyclerView.Adapter<ContentDetailView
                     }
                 }
                 case TYPE_NORMAL: {
-                    ContentDetail contentDetail = contentDetailList.get(position);
+                    TopicDetail contentDetail = contentDetailList.get(position);
                     holder.contentDetailContent.setText(contentDetail.getReplyContent());
                     holder.contentDetailContent.setMovementMethod(LinkMovementMethod.getInstance());
                     holder.contentDetailUsername.setText(contentDetail.getUsername());

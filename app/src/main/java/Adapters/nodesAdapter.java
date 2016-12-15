@@ -21,12 +21,12 @@ import whc.uniquestudio.v2exclient.R;
  * Created by 吴航辰 on 2016/12/11.
  */
 
-public class nodesAdapter extends RecyclerView.Adapter<NodesViewHolder> {
+public class NodesAdapter extends RecyclerView.Adapter<NodesViewHolder> {
     private Context context;
     private List<Nodes> nodesList;
     private SharedPreferences sharedPreferences;
 
-    public nodesAdapter(Context context, List<Nodes> nodesList) {
+    public NodesAdapter(Context context, List<Nodes> nodesList) {
         this.context = context;
         this.nodesList = nodesList;
     }
@@ -41,7 +41,6 @@ public class nodesAdapter extends RecyclerView.Adapter<NodesViewHolder> {
     public void onBindViewHolder(NodesViewHolder holder, int position) {
         final Nodes node = nodesList.get(position);
         sharedPreferences = context.getSharedPreferences("nodes", Context.MODE_APPEND);
-        Log.d("sharedPreferences",sharedPreferences.getAll().toString());
 
         holder.nodes_name.setText(node.getName());
         if (node.getHeader() != null) {
@@ -67,28 +66,30 @@ public class nodesAdapter extends RecyclerView.Adapter<NodesViewHolder> {
         } else {
             holder.nodes_switch.setChecked(false);
         }
-        holder.onCheckedChangeListener=new CompoundButton.OnCheckedChangeListener() {
+        holder.onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                Log.d(node.getName(),isChecked+"");
+                Log.d(node.getName(), isChecked + "");
                 Log.d("Data", sharedPreferences.getAll().toString());
-                if (isChecked) {
-                    int nodes_number = sharedPreferences.getInt("nodes_number", 1);
-                    editor.putString("" + (nodes_number + 1), node.getName());
-                    editor.putString(node.getName(), node.getUrl());
-                    editor.putInt("nodes_number", nodes_number + 1);
-                } else {
-                    editor.remove(node.getName());
-                    for (int i = 1; i <= sharedPreferences.getInt("nodes_number", 0); i++) {
-                        if (sharedPreferences.getString(i + "", " ").equals(node.getName())) {
-                            editor.remove("" + i);
+                if (buttonView.isShown()) {
+                    if (isChecked) {
+                        int nodes_number = sharedPreferences.getInt("nodes_number", 1);
+                        editor.putString("" + (nodes_number + 1), node.getName());
+                        editor.putString(node.getName(), node.getUrl());
+                        editor.putInt("nodes_number", nodes_number + 1);
+                    } else {
+
+                        editor.remove(node.getName());
+                        for (int i = 1; i <= sharedPreferences.getInt("nodes_number", 0); i++) {
+                            if (sharedPreferences.getString(i + "", " ").equals(node.getName())) {
+                                editor.remove("" + i);
+                            }
                         }
+                        editor.putInt("nodes_number", sharedPreferences.getInt("node_number", 1) - 1);
                     }
-                    editor.putInt("nodes_number", sharedPreferences.getInt("node_number", 1) - 1);
+                    editor.commit();
                 }
-                editor.commit();
-                Log.d("sharedPreferences",sharedPreferences.getAll().toString());
             }
         };
         holder.nodes_switch.setOnCheckedChangeListener(holder.onCheckedChangeListener);
