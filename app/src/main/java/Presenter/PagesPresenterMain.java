@@ -3,9 +3,11 @@ package Presenter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ActivityView.PagesView;
 import Adapters.MyFragmentAdapter;
@@ -33,18 +35,12 @@ public class PagesPresenterMain implements PagesPresenter {
         addFragment("https://www.v2ex.com/api/topics/hot.json", "最热主题");
         addFragment("https://www.v2ex.com/api/topics/latest.json", "最新主题");
         SharedPreferences sharedPreferences = pagesView.getTheSharedPreferences("nodes", MODE_APPEND);
-        if (sharedPreferences.contains("nodes_number")) {
-            for (int i = 1; i <= sharedPreferences.getInt("nodes_number", 1); i++) {
-                String name = sharedPreferences.getString("" + i, "none");
-                String nodeUrl = sharedPreferences.getString(name, "");
-                addFragment(nodeUrl, name);
-            }
-        } else {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt("nodes_number", 0);
-            editor.commit();
+        Map<String, ?> stringMap = sharedPreferences.getAll();
+        for (Map.Entry<String, ?> stringEntry : stringMap.entrySet()) {
+            Log.d(stringEntry.getKey(), stringEntry.getValue().toString());
+            addFragment(stringEntry.getValue().toString(), stringEntry.getKey());
         }
-         MyFragmentAdapter myFragmentAdapter = new MyFragmentAdapter(pagesView.getTheFragmentManager(), fragmentList, titleList);
+        MyFragmentAdapter myFragmentAdapter = new MyFragmentAdapter(pagesView.getTheFragmentManager(), fragmentList, titleList);
         pagesView.setAdapter(myFragmentAdapter);
 
     }

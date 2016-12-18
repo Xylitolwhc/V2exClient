@@ -70,23 +70,11 @@ public class NodesAdapter extends RecyclerView.Adapter<NodesViewHolder> {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                Log.d(node.getName(), isChecked + "");
-                Log.d("Data", sharedPreferences.getAll().toString());
                 if (buttonView.isShown()) {
                     if (isChecked) {
-                        int nodes_number = sharedPreferences.getInt("nodes_number", 1);
-                        editor.putString("" + (nodes_number + 1), node.getName());
                         editor.putString(node.getName(), node.getUrl());
-                        editor.putInt("nodes_number", nodes_number + 1);
                     } else {
-
                         editor.remove(node.getName());
-                        for (int i = 1; i <= sharedPreferences.getInt("nodes_number", 0); i++) {
-                            if (sharedPreferences.getString(i + "", " ").equals(node.getName())) {
-                                editor.remove("" + i);
-                            }
-                        }
-                        editor.putInt("nodes_number", sharedPreferences.getInt("node_number", 1) - 1);
                     }
                     editor.commit();
                 }
